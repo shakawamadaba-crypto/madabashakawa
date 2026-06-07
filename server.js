@@ -1,3 +1,4 @@
+const puppeteer = require("puppeteer");
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -121,13 +122,14 @@ const PORT = process.env.PORT || 3000;
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    ]
-  }
+  executablePath: puppeteer.executablePath(),
+  headless: true,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ]
+}
 });
 
 client.on("qr", qr => {
