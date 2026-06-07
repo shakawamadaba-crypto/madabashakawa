@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>معالجة وتنفيذ الطلبات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #06121f; --surface: #0b1f33; --surface2: #12314d;
+        --border: rgba(77,166,255,0.22); --accent: #1e90ff; --accent2: #00bfff;
+        --text: #eaf4ff; --muted: #9fc4e8; --danger: #ef4444;
+      }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:"Cairo",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; padding:25px; }
+      .bg-layer { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(37,99,235,0.15) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(96,165,250,0.1) 0%,transparent 60%); pointer-events:none; }
+      .grid-overlay { position:fixed; inset:0; z-index:0; background-image:linear-gradient(rgba(77,166,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(77,166,255,0.04) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; }
+      .wrapper { position:relative; z-index:1; max-width:1200px; margin:auto; }
+      h1 { text-align:center; margin-bottom:30px; font-size:clamp(2rem,5vw,3rem); font-weight:900; background:linear-gradient(135deg,#eaf4ff,#4da6ff,#1e90ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+      .topbar { display:flex; justify-content:center; gap:10px; margin-bottom:30px; flex-wrap:wrap; }
+      .topbar button { background:var(--surface); border:1px solid var(--border); color:var(--accent); padding:14px 20px; border-radius:14px; cursor:pointer; font-weight:700; font-family:"Cairo",sans-serif; transition:0.3s; }
+      .topbar button:hover { border-color:var(--accent); transform:translateY(-2px); }
+      .processing-box { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:30px; margin-bottom:30px; box-shadow:0 20px 60px rgba(0,0,0,0.5); position:relative; overflow:hidden; }
+      .processing-box::before { content:""; position:absolute; top:0; right:0; left:0; height:2px; background:linear-gradient(90deg,transparent,#60a5fa,#2563eb,#1d4ed8,transparent); }
+      .processing-box h2 { color:var(--accent); margin-bottom:20px; }
+      .processing-area { min-height:180px; border:2px dashed var(--border); border-radius:18px; background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; text-align:center; padding:20px; }
+      .request-card { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:30px; margin-top:25px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+      .request-card h2 { color:var(--accent); margin-bottom:15px; }
+      .info { line-height:2.2; color:var(--text); }
+      .status-label { display:inline-block; margin-top:15px; padding:8px 14px; border-radius:10px; background:rgba(30,144,255,0.1); border:1px solid var(--border); color:var(--accent); font-weight:700; }
+      textarea { width:100%; min-height:150px; margin-top:20px; background:var(--surface2); border:1.5px solid rgba(77,166,255,0.12); border-radius:14px; padding:18px; color:var(--text); font-size:15px; resize:vertical; outline:none; font-family:"Cairo",sans-serif; }
+      textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(30,144,255,0.1); }
+      .upload-box { margin-top:20px; }
+      .upload-label { color:var(--muted); display:block; margin-bottom:10px; font-weight:600; font-size:14px; }
+      .upload-tabs { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+      .upload-tab-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:8px 16px; border-radius:10px; cursor:pointer; font-family:"Cairo",sans-serif; font-size:13px; font-weight:600; transition:0.3s; }
+      .upload-tab-btn:hover,.upload-tab-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(30,144,255,0.08); }
+      .upload-input-area { background:var(--surface2); border:2px dashed rgba(77,166,255,0.25); border-radius:14px; padding:20px; text-align:center; transition:0.3s; }
+      .upload-input-area:hover { border-color:var(--accent); }
+      .upload-input-area input[type="file"] { width:100%; background:transparent; border:none; color:var(--text); cursor:pointer; font-family:"Cairo",sans-serif; font-size:14px; }
+      .upload-hint { font-size:12px; color:var(--muted); margin-top:8px; }
+      .preview { display:flex; flex-wrap:wrap; gap:10px; margin-top:15px; }
+      .preview-item { position:relative; }
+      .preview-item img { width:120px; height:120px; object-fit:cover; border-radius:14px; border:2px solid var(--border); display:block; }
+      .preview-item video { width:180px; height:120px; object-fit:cover; border-radius:14px; border:2px solid var(--border); background:#000; display:block; }
+      .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:25px; }
+      .actions button { border:none; border-radius:12px; padding:14px 18px; cursor:pointer; font-weight:700; font-family:"Cairo",sans-serif; font-size:14px; transition:0.3s; }
+      .actions button:hover { transform:translateY(-2px); }
+      .complete { background:linear-gradient(135deg,#3b82f6,#2563eb,#1d4ed8); color:white; }
+      .whatsapp { background:#25d366; color:#06121f; }
+      .sms { background:var(--accent2); color:#06121f; }
+      .delete { background:var(--danger); color:white; }
+      .status { margin-top:18px; padding:14px; border-radius:12px; background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.2); color:#25d366; display:none; }
+      .empty { text-align:center; color:var(--muted); margin-top:40px; font-size:20px; }
+      @media (max-width:700px) { .actions { flex-direction:column; } }
+    </style>
+  </head>
+  <body>
+    <div class="bg-layer"></div>
+    <div class="grid-overlay"></div>
+    <div class="wrapper">
+      <h1>معالجة وتنفيذ شكاوى مديرية الأشغال والخدمات الهندسية</h1>
+      <div class="topbar">
+        
+        <button onclick="loadRequests()">تحديث الصفحة</button>
+      </div>
+      <div class="processing-box">
+        <h2>منطقة معالجة الطلبات</h2>
+        <div class="processing-area">قم باختيار طلب من الأسفل لمعالجته</div>
+      </div>
+      <div id="requests"></div>
+    </div>
+
+  <script>
+    const DIRECTORATE_KEY = "works";
+    const DIRECTORATE_NAME = "مديرية الأشغال والخدمات الهندسية";
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function requestMediaHtml(request) {
+      if (!request || !request.media) return "";
+      var src = request.media;
+      var type = request.mediaType || "";
+      if (type.indexOf("image/") === 0) {
+        return '<div style="margin-top:12px"><strong>وسائط الواتساب:</strong><br><img src="' + escapeHtml(src) + '" style="max-width:260px;border-radius:12px;margin-top:8px;border:1px solid rgba(77,166,255,0.3)"></div>';
+      }
+      if (type.indexOf("video/") === 0) {
+        return '<div style="margin-top:12px"><strong>وسائط الواتساب:</strong><br><video controls src="' + escapeHtml(src) + '" style="max-width:320px;border-radius:12px;margin-top:8px;border:1px solid rgba(77,166,255,0.3)"></video></div>';
+      }
+      if (type.indexOf("audio/") === 0) {
+        return '<div style="margin-top:12px"><strong>وسائط الواتساب:</strong><br><audio controls src="' + escapeHtml(src) + '" style="margin-top:8px"></audio></div>';
+      }
+      return '<div style="margin-top:12px"><a href="' + escapeHtml(src) + '" target="_blank" style="color:#4da6ff;font-weight:bold">📎 فتح وسائط الواتساب</a></div>';
+    }
+
+    async function loadRequests() {
+      const container = document.getElementById("requests");
+      container.innerHTML = '<div class="empty">جاري تحميل الطلبات...</div>';
+
+      try {
+        const res = await fetch("/directorate-messages/" + encodeURIComponent(DIRECTORATE_KEY));
+        const requests = await res.json();
+
+        container.innerHTML = "";
+
+        if (!requests || requests.length === 0) {
+          container.innerHTML = '<div class="empty">لا توجد طلبات حالياً</div>';
+          return;
+        }
+
+        requests.forEach(function(request) {
+          const div = document.createElement("div");
+          div.className = "request-card";
+          div.id = "card-" + request.id;
+
+          div.innerHTML =
+            '<h2>' + escapeHtml(request.name || "بدون اسم") + '</h2>' +
+            '<div class="info">' +
+              '<div><strong>رقم الهاتف:</strong> ' + escapeHtml(request.phone || "") + '</div>' +
+              '<div><strong>رقم الطلب:</strong> ' + escapeHtml(request.ticket || "") + '</div>' +
+              '<div><strong>وصف الطلب:</strong> ' + escapeHtml(request.description || request.body || "") + '</div>' +
+              '<div><strong>تاريخ الإرسال:</strong> ' + escapeHtml(request.date || "") + '</div>' +
+              '<div><strong>المديرية:</strong> ' + escapeHtml(request.targetDirectorate || DIRECTORATE_NAME) + '</div>' +
+              requestMediaHtml(request) +
+              '<div class="status-label">' + escapeHtml(request.status || "طلب جديد") + '</div>' +
+            '</div>' +
+            '<textarea id="reply-' + request.id + '" placeholder="اكتب تفاصيل تنفيذ الطلب">' + escapeHtml(request.reply || "") + '</textarea>' +
+            '<div class="upload-box">' +
+              '<span class="upload-label">📎 إرفاق صور أو فيديو أو فتح الكاميرا</span>' +
+              '<div class="upload-tabs">' +
+                '<button type="button" class="upload-tab-btn active" onclick="setMode(\'' + request.id + '\',\'image\',this)">📷 صورة</button>' +
+                '<button type="button" class="upload-tab-btn" onclick="setMode(\'' + request.id + '\',\'video\',this)">🎥 فيديو</button>' +
+                '<button type="button" class="upload-tab-btn" onclick="setMode(\'' + request.id + '\',\'camera\',this)">📸 كاميرا</button>' +
+                '<button type="button" class="upload-tab-btn" onclick="setMode(\'' + request.id + '\',\'any\',this)">📂 الكل</button>' +
+              '</div>' +
+              '<div class="upload-input-area">' +
+                '<input type="file" id="media-' + request.id + '" accept="image/*" multiple onchange="previewMedia(event,\'' + request.id + '\')" />' +
+                '<div class="upload-hint">يمكنك اختيار عدة ملفات في آن واحد</div>' +
+              '</div>' +
+              '<div class="preview" id="preview-' + request.id + '"></div>' +
+            '</div>' +
+            '<div class="actions">' +
+              '<button class="complete" onclick="completeRequest(\'' + request.id + '\')">تنفيذ وإرسال للإدارة</button>' +
+              '<button class="whatsapp" onclick="sendWhatsApp(\'' + request.id + '\')">واتساب</button>' +
+              '<button class="sms" onclick="sendSMS(\'' + request.id + '\')">SMS</button>' +
+            '</div>' +
+            '<div class="status" id="status-' + request.id + '">تم تنفيذ الطلب وإرساله للإدارة بنجاح ✅</div>';
+
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div class="empty">تعذر تحميل الطلبات من السيرفر. تأكد أن server.js و ngrok يعملان.</div>';
+      }
+    }
+
+    function setMode(id, mode, btn) {
+      var card = document.getElementById("card-" + id);
+      if (!card) return;
+      card.querySelectorAll(".upload-tab-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+
+      var input = document.getElementById("media-" + id);
+      input.value = "";
+
+      if (mode === "image") {
+        input.accept = "image/*";
+        input.removeAttribute("capture");
+        input.multiple = true;
+      } else if (mode === "video") {
+        input.accept = "video/*";
+        input.removeAttribute("capture");
+        input.multiple = true;
+      } else if (mode === "camera") {
+        input.accept = "image/*,video/*";
+        input.setAttribute("capture", "environment");
+        input.multiple = false;
+      } else {
+        input.accept = "image/*,video/*,audio/*,.pdf,.doc,.docx";
+        input.removeAttribute("capture");
+        input.multiple = true;
+      }
+    }
+
+    function previewMedia(event, id) {
+      var preview = document.getElementById("preview-" + id);
+      preview.innerHTML = "";
+      var files = event.target.files || [];
+
+      Array.prototype.forEach.call(files, function(file) {
+        var reader = new FileReader();
+        var isVideo = file.type.startsWith("video/");
+        var isImage = file.type.startsWith("image/");
+        var isAudio = file.type.startsWith("audio/");
+
+        reader.onload = function(e) {
+          var item = document.createElement("div");
+          item.className = "preview-item";
+
+          if (isVideo) item.innerHTML = '<video src="' + e.target.result + '" controls></video>';
+          else if (isImage) item.innerHTML = '<img src="' + e.target.result + '" alt="مرفق" />';
+          else if (isAudio) item.innerHTML = '<audio controls src="' + e.target.result + '"></audio>';
+          else item.innerHTML = '<a style="color:#4da6ff" href="' + e.target.result + '" download="' + escapeHtml(file.name) + '">📎 ' + escapeHtml(file.name) + '</a>';
+
+          preview.appendChild(item);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function findRequestById(id, requests) {
+      return (requests || []).find(function(r) { return String(r.id) === String(id); });
+    }
+
+    async function getCurrentRequest(id) {
+      const res = await fetch("/directorate-messages/" + encodeURIComponent(DIRECTORATE_KEY));
+      const requests = await res.json();
+      return findRequestById(id, requests);
+    }
+
+    function collectMediaForReply(id) {
+      return new Promise(function(resolve) {
+        var input = document.getElementById("media-" + id);
+        var files = input && input.files ? Array.prototype.slice.call(input.files) : [];
+        if (!files.length) return resolve([]);
+
+        var done = 0;
+        var media = [];
+
+        files.forEach(function(file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            media.push({
+              name: file.name,
+              type: file.type || "application/octet-stream",
+              data: e.target.result
+            });
+            done++;
+            if (done === files.length) resolve(media);
+          };
+          reader.onerror = function() {
+            done++;
+            if (done === files.length) resolve(media);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    }
+
+    async function completeRequest(id) {
+      try {
+        const request = await getCurrentRequest(id);
+        if (!request) {
+          alert("لم يتم العثور على الطلب في السيرفر");
+          return;
+        }
+
+        const reply = document.getElementById("reply-" + id).value || "";
+        const media = await collectMediaForReply(id);
+
+        const message =
+          "تمت معالجة الطلب في " + DIRECTORATE_NAME + "
+" +
+          "رقم الطلب: " + (request.ticket || "") + "
+" +
+          "تفاصيل المعالجة:
+" + reply;
+
+        const res = await fetch("/reply-to-admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            requestId: request.id,
+            directorateKey: DIRECTORATE_KEY,
+            directorate: DIRECTORATE_NAME,
+            targetDirectorate: request.targetDirectorate || DIRECTORATE_NAME,
+            name: request.name || "",
+            phone: request.phone || "",
+            ticket: request.ticket || "",
+            reply: reply,
+            message: message,
+            status: "تم التنفيذ",
+            media: media,
+            originalMedia: request.media || "",
+            originalMediaType: request.mediaType || "",
+            date: new Date().toLocaleString("ar")
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById("status-" + id).style.display = "block";
+          alert("تم إرسال المعالجة إلى لوحة الإدارة ✅");
+          loadRequests();
+        } else {
+          alert("حدث خطأ أثناء إرسال المعالجة للإدارة");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("فشل الاتصال بالسيرفر. تأكد أن ngrok و server.js يعملان.");
+      }
+    }
+
+    async function sendWhatsApp(id) {
+      const request = await getCurrentRequest(id);
+      if (!request) return;
+
+      var reply = document.getElementById("reply-" + id).value || "";
+      var message =
+        "مرحباً " + (request.name || "") +
+        "
+
+تم تنفيذ طلبك بنجاح" +
+        "
+
+رقم الطلب: " + (request.ticket || "") +
+        "
+
+تفاصيل التنفيذ:
+" + reply;
+
+      var phone = String(request.phone || "").replace(/[^0-9]/g, "");
+      if (!phone) {
+        alert("لا يوجد رقم هاتف صالح");
+        return;
+      }
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), "_blank");
+    }
+
+    async function sendSMS(id) {
+      const request = await getCurrentRequest(id);
+      if (!request) return;
+
+      var reply = document.getElementById("reply-" + id).value || "";
+      var text = "تم تنفيذ طلبك بنجاح
+رقم الطلب: " + (request.ticket || "") + "
+" + reply;
+      var phone = String(request.phone || "").replace(/[^0-9]/g, "");
+      if (!phone) {
+        alert("لا يوجد رقم هاتف صالح");
+        return;
+      }
+      window.location.href = "sms:" + phone + "?body=" + encodeURIComponent(text);
+    }
+
+    setInterval(loadRequests, 3000);
+    loadRequests();
+  </script>
+</body>
+</html>

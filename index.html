@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة إدارة الطلبات والشكاوى</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --green:#004b32;
+  --green2:#00633f;
+  --green3:#003521;
+  --gold:#c99519;
+  --gold2:#e2b545;
+  --cream:#f7efe3;
+  --cream2:#fffaf2;
+  --card:#fffdf8;
+  --text:#10231c;
+  --muted:#6b6b62;
+  --border:#eadfce;
+  --shadow:0 12px 35px rgba(0,0,0,.12);
+  --danger:#b91c1c;
+  --success:#188038;
+  --warning:#c98a00;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:"Cairo","Tajawal",sans-serif;
+  min-height:100vh;
+  color:var(--text);
+
+  background:
+  linear-gradient(rgba(255,250,242,.88),rgba(255,250,242,.88)),
+  url("mayor.jpg");
+
+  background-repeat:no-repeat;
+  background-position:right top;
+  background-size:700px;
+
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 85% 10%,rgba(201,149,25,.12),transparent 35%),
+    radial-gradient(circle at 10% 35%,rgba(0,75,50,.20),transparent 28%);
+  z-index:-2;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  left:-220px;
+  top:-160px;
+
+  width:620px;
+  height:620px;
+
+  background:var(--green);
+
+  border-bottom-right-radius:100%;
+  border-right:12px solid var(--gold);
+
+  opacity:.97;
+  z-index:-1;
+}
+
+.wrapper{
+  width:min(96%,1450px);
+  margin:auto;
+  padding:26px 0 0;
+}
+
+.hero{
+  min-height:310px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.logo-box{
+  position:absolute;
+  right:55px;
+  top:10px;
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--green);
+  font-weight:900;
+  background:rgba(255,250,242,.7);
+}
+
+.logo-box .crest{
+  font-size:58px;
+  color:var(--gold);
+  line-height:1;
+}
+
+.logo-box small{
+  display:block;
+  margin-top:-8px;
+  color:var(--green);
+}
+
+.hero-title{
+  margin-top:-60px;
+}
+
+.hero-title h1{
+  font-size:clamp(34px,5vw,64px);
+  color:var(--green3);
+  font-weight:900;
+  text-shadow:0 2px 0 rgba(201,149,25,.14);
+}
+
+.hero-title .city{
+  color:var(--gold);
+  font-size:30px;
+  font-weight:900;
+  margin-top:4px;
+}
+
+.hero-title .sub{
+  font-size:20px;
+  font-weight:700;
+  margin-top:4px;
+}
+
+background:url("mayor.jpg") center center / cover fixed no-repeat; 
+
+.filter-tabs{
+  margin-top:-50px;
+  display:flex;
+  justify-content:center;
+  gap:22px;
+  flex-wrap:wrap;
+}
+
+.filter-tabs button{
+  border:1px solid rgba(0,75,50,.18);
+  background:rgba(255,253,248,.88);
+  box-shadow:0 8px 20px rgba(0,0,0,.10);
+  min-width:150px;
+  padding:11px 22px;
+  border-radius:12px;
+  color:var(--text);
+  font-weight:900;
+  font-size:17px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.filter-tabs button span{
+  display:inline-grid;
+  place-items:center;
+  min-width:34px;
+  height:28px;
+  padding:0 8px;
+  margin-left:8px;
+  border-radius:30px;
+  background:#edf5ed;
+  color:var(--green);
+  font-weight:900;
+}
+
+.filter-tabs button.active{
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:white;
+}
+
+.filter-tabs button.active span{
+  background:white;
+  color:var(--green);
+}
+
+.main-panel{
+  margin-top:80px;
+  background:rgba(255,253,248,.92);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(6px);
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1.1fr;
+  gap:20px;
+  margin-bottom:24px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 8px 22px rgba(0,0,0,.08);
+  position:relative;
+  overflow:hidden;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  bottom:14px;
+  right:18px;
+  left:18px;
+  height:4px;
+  background:var(--green);
+  border-radius:20px;
+}
+
+.card.warning::after{background:var(--gold);}
+.card .icon{
+  width:66px;
+  height:66px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  float:right;
+  margin-left:18px;
+  background:#e8f3e8;
+  color:var(--green);
+}
+
+.card.warning .icon{
+  background:#fff0cb;
+  color:var(--gold);
+}
+
+.card h3{
+  font-size:20px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.card .num{
+  font-size:42px;
+  font-weight:900;
+  color:var(--green);
+  line-height:1;
+}
+
+.card.warning .num{
+  color:var(--gold);
+}
+
+.card p{
+  color:var(--muted);
+  font-weight:700;
+  margin-top:8px;
+}
+
+.open-directorate h3{
+  font-size:18px;
+  margin-bottom:14px;
+}
+
+.open-directorate select,
+.search-box input{
+  width:100%;
+  height:48px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:white;
+  padding:0 14px;
+  font-family:inherit;
+  font-size:15px;
+  color:var(--text);
+  outline:none;
+}
+
+.open-directorate button,
+.search-actions button,
+.action-btn{
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:white;
+  padding:11px 22px;
+  font-family:inherit;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 6px 14px rgba(0,75,50,.22);
+  transition:.22s;
+}
+
+.open-directorate button{
+  width:100%;
+  margin-top:14px;
+  height:48px;
+  font-size:16px;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  opacity:.94;
+}
+
+.search-section{
+  background:rgba(255,253,248,.88);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:22px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:24px;
+  font-weight:900;
+  color:var(--green3);
+  margin-bottom:22px;
+}
+
+.search-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+}
+
+.search-box label{
+  display:block;
+  margin-bottom:8px;
+  font-weight:800;
+}
+
+.search-box input{
+  height:46px;
+}
+
+.search-actions{
+  margin-top:16px;
+  display:flex;
+  gap:12px;
+}
+
+.search-actions .reset{
+  background:#f4eadc;
+  color:var(--text);
+  box-shadow:none;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1100px;
+}
+
+thead{
+  background:linear-gradient(135deg,var(--green3),var(--green2));
+  color:white;
+}
+
+th,td{
+  padding:15px 14px;
+  text-align:right;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+  font-weight:700;
+}
+
+tbody tr:hover{
+  background:#fff8ea;
+}
+
+.ticket{
+  color:var(--green);
+  font-weight:900;
+  font-size:21px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 14px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:900;
+}
+
+.badge.pending{
+  color:var(--warning);
+  background:#fff3d1;
+  border:1px solid #f2c96a;
+}
+
+.badge.sent{
+  color:var(--success);
+  background:#e7f5e7;
+  border:1px solid #b9dfbb;
+}
+
+.row-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.view-btn{
+  background:#f6edde;
+  color:#7a5100;
+  box-shadow:none;
+}
+
+.small-select{
+  max-width:190px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:white;
+  font-family:inherit;
+  padding:0 8px;
+}
+
+.whatsapp-section{
+  margin-top:24px;
+  background:rgba(255,253,248,.92);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.whatsapp-list{
+  display:grid;
+  gap:14px;
+}
+
+.wa-card{
+  background:white;
+  border:1px solid var(--border);
+  border-right:5px solid var(--green);
+  border-radius:12px;
+  padding:16px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+  font-weight:800;
+}
+
+.footer{
+  margin-top:26px;
+  background:linear-gradient(135deg,var(--green3),var(--green));
+  color:white;
+  text-align:center;
+  padding:28px 20px;
+  border-top:5px solid var(--gold);
+  position:relative;
+}
+
+.footer strong{
+  display:block;
+  color:var(--gold2);
+  font-size:20px;
+  margin-bottom:6px;
+}
+
+@media(max-width:1050px){
+  .cards,.search-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .mayor{
+    opacity:.18;
+  }
+}
+
+@media(max-width:700px){
+  body{
+    background-attachment:scroll;
+  }
+  body::after{
+  content:"";
+  position:fixed;
+  left:-320px;
+  top:-180px;
+
+  width:700px;
+  height:700px;
+
+  background:var(--green);
+
+  border-bottom-right-radius:100%;
+  border-right:12px solid var(--gold);
+
+  opacity:.97;
+  z-index:-1;
+}
+  .hero{
+    min-height:270px;
+  }
+ .logo-box{
+  position:absolute;
+  left:55px;
+  top:10px;
+}
+  .logo-box .crest{
+    font-size:38px;
+  }
+  .mayor{
+    width:210px;
+    height:210px;
+    left:0;
+  }
+  .filter-tabs{
+    margin-top:-30px;
+  }
+  .cards,.search-grid{
+    grid-template-columns:1fr;
+  }
+  .main-panel{
+    margin-top:45px;
+    padding:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <section class="hero">
+    <div class="logo-box">
+      <div>
+        <div class="crest">⚜</div>
+        <small>البلدية</small>
+      </div>
+    </div>
+
+    <div class="mayor"></div>
+
+    <div class="hero-title">
+      <h1>لوحة إدارة الطلبات والشكاوى</h1>
+      <div class="city">بلدية ...</div>
+      <div class="sub">خدمتكم شرف لنا</div>
+    </div>
+  </section>
+
+  <div class="filter-tabs">
+    <button id="filterAll" class="active" onclick="setFilter('all')"><span id="tabAll">0</span> الكل</button>
+    <button id="filterPending" onclick="setFilter('pending')"><span id="tabPending">0</span> قيد الانتظار</button>
+    <button id="filterSent" onclick="setFilter('sent')"><span id="tabSent">0</span> تم الإرسال</button>
+  </div>
+
+  <main class="main-panel">
+
+    <section class="cards">
+      <div class="card">
+        <div class="icon">✈</div>
+        <h3>تم الإرسال</h3>
+        <div class="num" id="countSent">0</div>
+        <p>طلب تم إرساله للمديريات</p>
+      </div>
+
+      <div class="card warning">
+        <div class="icon">⏱</div>
+        <h3>قيد الانتظار</h3>
+        <div class="num" id="countPending">0</div>
+        <p>طلب في انتظار الإرسال</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">📄</div>
+        <h3>الكل</h3>
+        <div class="num" id="countAll">0</div>
+        <p>إجمالي الطلبات المستلمة</p>
+      </div>
+
+      <div class="card open-directorate">
+        <h3>🏢 إرسال طلب جديد إلى مديرية</h3>
+        <select id="deptPageSelect">
+          <option value="">اختر المديرية</option>
+          <option value="مديرية_الأشغال_والخدمات_الهندسية.html">مديرية الأشغال والخدمات الهندسية</option>
+          <option value="مديرية_التخطيط_والتنظيم.html">مديرية التخطيط والتنظيم</option>
+          <option value="مديرية_الشؤون_الصحية_والبيئية.html">مديرية الشؤون الصحية والبيئية</option>
+          <option value="مديرية_الخدمات_الزراعية_والحدائق_والمنتزهات.html">مديرية الخدمات الزراعية والحدائق والمنتزهات</option>
+          <option value="مديرية_الحركة_والصيانة.html">مديرية الحركة والصيانة</option>
+          <option value="مديرية_الاستثمار.html">مديرية الاستثمار</option>
+          <option value="مديرية_رخص_المهن.html">مديرية رخص المهن</option>
+          <option value="مديرية_شؤون_المناطق.html">مديرية شؤون المناطق</option>
+        </select>
+        <button onclick="openDeptPage()">فتح مديرية</button>
+      </div>
+    </section>
+
+    <section class="search-section">
+      <div class="section-title">🔍 البحث والتصفية</div>
+
+      <div class="search-grid">
+        <div class="search-box">
+          <label>الاسم</label>
+          <input id="searchName" type="text" placeholder="ابحث بالاسم">
+        </div>
+
+        <div class="search-box">
+          <label>رقم الهاتف</label>
+          <input id="searchPhone" type="text" placeholder="ابحث برقم الهاتف">
+        </div>
+
+        <div class="search-box">
+          <label>رقم الطلب / الشكوى</label>
+          <input id="searchTicket" type="text" placeholder="ابحث برقم الطلب أو الملاحظات">
+        </div>
+
+        <div class="search-box">
+          <label>من تاريخ</label>
+          <input id="searchFromDate" type="date">
+        </div>
+
+        <div class="search-box">
+          <label>إلى تاريخ</label>
+          <input id="searchToDate" type="date">
+        </div>
+      </div>
+
+      <div class="search-actions">
+        <button onclick="loadRequests()">بحث 🔎</button>
+        <button class="reset" onclick="resetSearch()">إعادة ضبط ↻</button>
+      </div>
+    </section>
+
+    <section class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم الطلب</th>
+            <th>الاسم</th>
+            <th>رقم الهاتف</th>
+            <th>الموضوع</th>
+            <th>التفاصيل</th>
+            <th>المديرية</th>
+            <th>تاريخ الاستلام</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="requestsTable"></tbody>
+      </table>
+    </section>
+
+    <section class="whatsapp-section">
+      <div class="section-title">📱 رسائل الواتساب الواردة</div>
+      <div id="whatsappMessages" class="whatsapp-list">
+        <div class="empty">لا توجد رسائل واردة حالياً</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <strong>نعمل من أجلكم ... من أجل مدينتنا أجمل</strong>
+  <div>جميع الحقوق محفوظة © 2025 بلدية ...</div>
+</footer>
+
+<audio id="notifySound">
+  <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mp3">
+</audio>
+
+<script>
+const DB = {
+  get(key){ return JSON.parse(localStorage.getItem(key) || "[]"); },
+  set(key,value){ localStorage.setItem(key,JSON.stringify(value)); }
+};
+
+let currentFilter = "all";
+let lastCount = 0;
+
+const deptPages = {
+  works:"مديرية_الأشغال_والخدمات_الهندسية.html",
+  planning:"مديرية_التخطيط_والتنظيم.html",
+  health:"مديرية_الشؤون_الصحية_والبيئية.html",
+  gardens:"مديرية_الخدمات_الزراعية_والحدائق_والمنتزهات.html",
+  maintenance:"مديرية_الحركة_والصيانة.html",
+  investment:"مديرية_الاستثمار.html",
+  licenses:"مديرية_رخص_المهن.html",
+  regions:"مديرية_شؤون_المناطق.html"
+};
+
+const deptNames = {
+  works:"مديرية الأشغال والخدمات الهندسية",
+  planning:"مديرية التخطيط والتنظيم",
+  health:"مديرية الشؤون الصحية والبيئية",
+  gardens:"مديرية الخدمات الزراعية والحدائق والمنتزهات",
+  maintenance:"مديرية الحركة والصيانة",
+  investment:"مديرية الاستثمار",
+  licenses:"مديرية رخص المهن",
+  regions:"مديرية شؤون المناطق"
+};
+
+function escapeHtml(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function openDeptPage(){
+  const val = document.getElementById("deptPageSelect").value;
+  if(!val){
+    alert("يرجى اختيار مديرية أولاً");
+    return;
+  }
+  window.open(val,"_blank");
+}
+
+function playSound(){
+  try{ document.getElementById("notifySound").play(); }catch(e){}
+}
+
+function getRequestStatus(id){
+  const sent = DB.get("sentRequests");
+  const item = sent.find(s => String(s.id) === String(id));
+  if(item) return {status:"sent",label:"تم الإرسال",cls:"sent"};
+  return {status:"pending",label:"قيد الانتظار",cls:"pending"};
+}
+
+function setFilter(filter){
+  currentFilter = filter;
+
+  document.getElementById("filterAll").classList.toggle("active",filter === "all");
+  document.getElementById("filterPending").classList.toggle("active",filter === "pending");
+  document.getElementById("filterSent").classList.toggle("active",filter === "sent");
+
+  loadRequests();
+}
+
+function resetSearch(){
+  document.getElementById("searchName").value = "";
+  document.getElementById("searchPhone").value = "";
+  document.getElementById("searchTicket").value = "";
+  document.getElementById("searchFromDate").value = "";
+  document.getElementById("searchToDate").value = "";
+  loadRequests();
+}
+
+function updateCounts(requests){
+  const sent = DB.get("sentRequests");
+  const sentIds = sent.map(s => String(s.id));
+
+  const allCount = requests.length;
+  const sentCount = requests.filter(r => sentIds.includes(String(r.id))).length;
+  const pendingCount = allCount - sentCount;
+
+  document.getElementById("countAll").innerText = allCount;
+  document.getElementById("countSent").innerText = sentCount;
+  document.getElementById("countPending").innerText = pendingCount;
+
+  document.getElementById("tabAll").innerText = allCount;
+  document.getElementById("tabSent").innerText = sentCount;
+  document.getElementById("tabPending").innerText = pendingCount;
+}
+
+function passSearch(r){
+  const name = document.getElementById("searchName").value.trim().toLowerCase();
+  const phone = document.getElementById("searchPhone").value.trim().toLowerCase();
+  const ticket = document.getElementById("searchTicket").value.trim().toLowerCase();
+  const fromDate = document.getElementById("searchFromDate").value;
+  const toDate = document.getElementById("searchToDate").value;
+
+  const rName = String(r.name || "").toLowerCase();
+  const rPhone = String(r.phone || r.number || r.from || "").toLowerCase();
+  const rTicket = String(r.ticket || r.id || r.description || r.body || "").toLowerCase();
+  const rDateText = String(r.date || r.timestamp || "");
+
+  if(name && !rName.includes(name)) return false;
+  if(phone && !rPhone.includes(phone)) return false;
+  if(ticket && !rTicket.includes(ticket)) return false;
+
+  if(fromDate || toDate){
+    const parsed = new Date(r.date || r.timestamp || r.createdAt || 0);
+    if(!isNaN(parsed)){
+      if(fromDate && parsed < new Date(fromDate + "T00:00:00")) return false;
+      if(toDate && parsed > new Date(toDate + "T23:59:59")) return false;
+    }else{
+      if(fromDate && !rDateText.includes(fromDate)) return false;
+      if(toDate && !rDateText.includes(toDate)) return false;
+    }
+  }
+
+  return true;
+}
+
+function deptOptions(id){
+  return `
+    <select class="small-select" id="dept-${id}">
+      <option value="">اختر المديرية</option>
+      <option value="works">الأشغال والخدمات الهندسية</option>
+      <option value="planning">التخطيط والتنظيم</option>
+      <option value="health">الشؤون الصحية والبيئية</option>
+      <option value="gardens">الخدمات الزراعية والحدائق</option>
+      <option value="maintenance">الحركة والصيانة</option>
+      <option value="investment">الاستثمار</option>
+      <option value="licenses">رخص المهن</option>
+      <option value="regions">شؤون المناطق</option>
+    </select>
+  `;
+}
+
+function loadRequests(){
+  let requests = DB.get("adminRequests");
+
+  if(requests.length === 0){
+    requests = [
+      {id:128,name:"محمد أحمد",phone:"0791234567",ticket:"#128",subject:"صيانة طريق",description:"طلب صيانة طريق تضرر جزء من الطريق الرئيسي بحاجة إلى صيانة",directorate:"صيانة الطرق",date:"2025/05/26 10:30 ص"},
+      {id:127,name:"أحمد محمود",phone:"0787654321",ticket:"#127",subject:"نظافة عامة",description:"الشارع بحاجة لتنظيف وتنظيف الحاويات",directorate:"نظافة المدينة",date:"2025/05/26 09:15 ص"},
+      {id:126,name:"سارة علي",phone:"0799988776",ticket:"#126",subject:"ترخيص محل",description:"طلب ترخيص محل تجاري لبيع المواد الغذائية",directorate:"رخص المهن",date:"2025/05/26 08:45 ص"},
+      {id:125,name:"خالد محمد",phone:"0781122334",ticket:"#125",subject:"استفسار",description:"استفسار حول دوام الموظفين في العيد",directorate:"خدمة المواطنين",date:"2025/05/26 07:30 ص"}
+    ];
+    DB.set("adminRequests",requests);
+  }
+
+  updateCounts(requests);
+
+  if(requests.length > lastCount) playSound();
+  lastCount = requests.length;
+
+  let display = requests.slice().reverse();
+
+  if(currentFilter !== "all"){
+    display = display.filter(r => getRequestStatus(r.id).status === currentFilter);
+  }
+
+  display = display.filter(passSearch);
+
+  const tbody = document.getElementById("requestsTable");
+
+  if(display.length === 0){
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty">لا توجد طلبات مطابقة</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = display.map(r => {
+    const st = getRequestStatus(r.id);
+    return `
+      <tr>
+        <td><span class="ticket">${escapeHtml(r.ticket || "#" + r.id)}</span></td>
+        <td>${escapeHtml(r.name || "بدون اسم")}</td>
+        <td>${escapeHtml(r.phone || r.number || r.from || "")}</td>
+        <td>${escapeHtml(r.subject || r.body || "طلب / شكوى")}</td>
+        <td>${escapeHtml(r.description || r.body || "")}</td>
+        <td>${escapeHtml(r.directorate || "غير محددة")}</td>
+        <td>${escapeHtml(r.date || r.timestamp || "")}</td>
+        <td><span class="badge ${st.cls}">${st.status === "sent" ? "✅" : "⏱"} ${st.label}</span></td>
+        <td>
+          <div class="row-actions">
+            ${deptOptions(r.id)}
+            <button class="action-btn" onclick="sendSelected('${r.id}')">إرسال</button>
+            <button class="action-btn view-btn" onclick="viewRequest('${r.id}')">عرض 👁</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function viewRequest(id){
+  const requests = DB.get("adminRequests");
+  const r = requests.find(x => String(x.id) === String(id));
+  if(!r) return;
+
+  alert(
+    "رقم الطلب: " + (r.ticket || r.id) + "\n" +
+    "الاسم: " + (r.name || "") + "\n" +
+    "الهاتف: " + (r.phone || r.number || "") + "\n" +
+    "التفاصيل: " + (r.description || r.body || "")
+  );
+}
+
+async function sendSelected(id){
+  const dept = document.getElementById("dept-" + id).value;
+  if(!dept){
+    alert("يرجى اختيار المديرية أولاً");
+    return;
+  }
+
+  const requests = DB.get("adminRequests");
+  const req = requests.find(r => String(r.id) === String(id));
+
+  if(!req){
+    alert("لم يتم العثور على الطلب");
+    return;
+  }
+
+  const payload = {
+    directorateKey:dept,
+    directorate:dept,
+    targetDirectorate:deptNames[dept],
+    id:req.id,
+    source:req.source || "admin",
+    name:req.name || "غير معروف",
+    phone:req.phone || req.number || req.from || "",
+    ticket:req.ticket || ("REQ-" + req.id),
+    description:req.description || req.body || "",
+    body:req.body || req.description || "",
+    date:req.date || new Date().toLocaleString("ar"),
+    status:"طلب جديد",
+    media:req.media || "",
+    mediaType:req.mediaType || "",
+    fileName:req.fileName || ""
+  };
+
+  try{
+    const res = await fetch("/send-to-directorate",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if(!data.success){
+      alert("حدث خطأ أثناء الإرسال: " + (data.error || ""));
+      return;
+    }
+  }catch(err){
+    console.warn("Server route not available, saved locally only.",err);
+  }
+
+  const sent = DB.get("sentRequests").filter(s => String(s.id) !== String(id));
+  sent.push({id:id,date:Date.now(),dept:dept,type:"selected"});
+  DB.set("sentRequests",sent);
+
+  alert("تم إرسال الطلب إلى " + deptNames[dept] + " ✅");
+  loadRequests();
+}
+
+function mediaPreviewHtml(m){
+  if(!m || !m.media) return "";
+  const media = escapeHtml(m.media);
+  const type = m.mediaType || "";
+  if(type.startsWith("image/")) return `<img src="${media}" style="max-width:220px;border-radius:10px;margin-top:10px">`;
+  if(type.startsWith("video/")) return `<video controls src="${media}" style="max-width:260px;border-radius:10px;margin-top:10px"></video>`;
+  if(type.startsWith("audio/")) return `<audio controls src="${media}" style="width:100%;margin-top:10px"></audio>`;
+  return `<a href="${media}" target="_blank">📎 فتح الوسائط</a>`;
+}
+
+async function loadWhatsAppMessages(){
+  const container = document.getElementById("whatsappMessages");
+
+  try{
+    const res = await fetch("/messages");
+    const messages = await res.json();
+
+    if(!messages || messages.length === 0){
+      container.innerHTML = `<div class="empty">لا توجد رسائل واردة حالياً</div>`;
+      return;
+    }
+
+    localStorage.setItem("lastWhatsAppInbox",JSON.stringify(messages));
+
+    container.innerHTML = messages.map(m => `
+      <div class="wa-card">
+        <strong>👤 ${escapeHtml(m.name || "غير معروف")}</strong><br>
+        <span>${escapeHtml(m.number || m.from || "")}</span>
+        <p style="margin:10px 0;white-space:pre-wrap">${escapeHtml(m.body || "رسالة بدون نص")}</p>
+        ${mediaPreviewHtml(m)}
+        <small>${escapeHtml(m.timestamp || "")}</small>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          ${deptOptions("wa-" + m.id)}
+          <button class="action-btn" onclick="sendWhatsappToDirectorate('${m.id}')">إرسال للمديرية</button>
+          <button class="action-btn view-btn" onclick="saveWhatsappAsRequest('${m.id}')">حفظ كطلب</button>
+        </div>
+      </div>
+    `).join("");
+
+  }catch(err){
+    container.innerHTML = `<div class="empty">تعذر تحميل رسائل الواتساب، تأكد أن server.js يعمل</div>`;
+  }
+}
+
+function saveWhatsappAsRequest(id){
+  const messages = JSON.parse(localStorage.getItem("lastWhatsAppInbox") || "[]");
+  const m = messages.find(x => String(x.id) === String(id));
+
+  if(!m){
+    alert("لم يتم العثور على الرسالة");
+    return;
+  }
+
+  const requests = DB.get("adminRequests");
+  const requestId = Date.now();
+
+  requests.push({
+    id:requestId,
+    ticket:"WA-" + requestId,
+    source:"whatsapp",
+    name:m.name || "غير معروف",
+    phone:m.number || m.from || "",
+    subject:"رسالة واتساب",
+    description:m.body || "رسالة واتساب تحتوي على وسائط",
+    body:m.body || "",
+    date:m.timestamp || new Date().toLocaleString("ar"),
+    media:m.media || "",
+    mediaType:m.mediaType || "",
+    fileName:m.fileName || ""
+  });
+
+  DB.set("adminRequests",requests);
+  alert("تم حفظ رسالة الواتساب كطلب جديد ✅");
+  loadRequests();
+}
+
+async function sendWhatsappToDirectorate(messageId){
+  saveWhatsappAsRequest(messageId);
+  const requests = DB.get("adminRequests");
+  const last = requests[requests.length - 1];
+  const select = document.getElementById("dept-wa-" + messageId);
+  if(select && select.value){
+    setTimeout(() => {
+      const fakeSelect = document.getElementById("dept-" + last.id);
+      if(fakeSelect) fakeSelect.value = select.value;
+      sendSelected(last.id);
+    },200);
+  }
+}
+
+setInterval(loadRequests,3000);
+setInterval(loadWhatsAppMessages,3000);
+
+loadRequests();
+loadWhatsAppMessages();
+</script>
+
+</body>
+</html>

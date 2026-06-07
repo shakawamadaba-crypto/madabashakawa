@@ -1,0 +1,1 @@
+{"scripts":{"start":"node server.js"},"dependencies":{"body-parser":"latest","cors":"latest","dotenv":"latest","express":"latest","mime-types":"latest","qrcode-terminal":"latest","whatsapp-web.js":"latest","puppeteer":"latest"}}
