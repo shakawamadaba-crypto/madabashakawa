@@ -1,4 +1,3 @@
-const puppeteer = require("puppeteer");
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -119,39 +118,14 @@ setInterval(() => {
 }, 60000);
 
 const PORT = process.env.PORT || 3000;
-async function startWhatsApp() {
-  const chromePath = await puppeteer.executablePath();
-
-  const client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-      executablePath: chromePath,
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
-      ]
-    }
-  });
-
-  client.on("qr", qr => {
-    console.log("Scan this QR with WhatsApp:");
-    qrcode.generate(qr, { small: true });
-  });
-
-  client.on("ready", () => {
-    console.log("✅ WhatsApp Web connected");
-  });
-
-  client.on("message", async (msg) => {
-    // keep your current message code here
-  });
-
-  //client.initialize();
-}
-
-startWhatsApp();
+const client = new Client({
+  authStrategy: new LocalAuth(),
+  puppeteer: {
+    executablePath: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  }
+});
 
 client.on("qr", qr => {
   console.log("Scan this QR with WhatsApp:");
@@ -164,18 +138,7 @@ client.on("ready", () => {
 
 client.on("message", async (msg) => {
   try {
-    let contact = {};
-
-try {
-  contact = await msg.getContact();
-} catch (contactError) {
-  console.error("Contact error:", contactError.message);
-
-  contact = {
-    number: "",
-    pushname: "غير محفوظ الاسم"
-  };
-}
+    const contact = await msg.getContact();
 
     const rawFrom = String(msg.from || "");
     const rawNumber = String(contact.number || "");
@@ -190,27 +153,19 @@ try {
     let fileName = null;
 
     if (msg.hasMedia) {
-  try {
-    const media = await msg.downloadMedia();
+      const media = await msg.downloadMedia();
 
-    if (media && media.data) {
-      const extension = mime.extension(media.mimetype) || "bin";
-      fileName = `${Date.now()}.${extension}`;
-      const filePath = path.join(__dirname, "uploads", fileName);
+      if (media && media.data) {
+        const extension = mime.extension(media.mimetype) || "bin";
+        fileName = `${Date.now()}.${extension}`;
+        const filePath = path.join(__dirname, "uploads", fileName);
 
-      fs.writeFileSync(filePath, media.data, "base64");
+        fs.writeFileSync(filePath, media.data, "base64");
 
-      mediaUrl = `/uploads/${fileName}`;
-      mediaType = media.mimetype;
+        mediaUrl = `/uploads/${fileName}`;
+        mediaType = media.mimetype;
+      }
     }
-  } catch (mediaError) {
-    console.error("Media download failed:", mediaError.message);
-
-    mediaUrl = null;
-    mediaType = null;
-    fileName = null;
-  }
-}
 
     messages.push({
       id: Date.now(),
@@ -232,8 +187,35 @@ try {
   } catch (err) {
     console.error("Message error:", err);
   }
-});client.initialize();
+});//client.initialize();
+let directorateMessages = {
+  works: [],
+  planning: [],
+  health: [],
+  gardens: [],
+  maintenance: [],
+  investment: [],
+  licenses: [],
+  regions: []
+};
 
+app.post("/send-to-directorate", (req, res) => {
+  const { directorate, request } = req.body;
+
+  if (!directorateMessages[directorate]) {
+    directorateMessages[directorate] = [];
+  }
+
+  directorateMessages[directorate].push(request);
+
+  console.log("Sent to directorate:", directorate, request);
+
+  res.json({ success: true });
+});
+
+app.get("/directorate-messages/:directorate", (req, res) => {
+  res.json(directorateMessages[req.params.directorate] || []);
+});
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`📱 Messages page: http://localhost:${PORT}/messages`);
