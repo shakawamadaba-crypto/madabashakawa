@@ -148,7 +148,7 @@ async function startWhatsApp() {
     // keep your current message code here
   });
 
-  client.initialize();
+  //client.initialize();
 }
 
 startWhatsApp();
