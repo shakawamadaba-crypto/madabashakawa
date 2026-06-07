@@ -1,1 +1,18 @@
-{"scripts":{"start":"node server.js"},"dependencies":{"body-parser":"latest","cors":"latest","dotenv":"latest","express":"latest","mime-types":"latest","qrcode-terminal":"latest","whatsapp-web.js":"latest","puppeteer":"latest"}}
+{
+  "name": "municipality-system",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "mime-types": "latest",
+    "puppeteer": "latest",
+    "qrcode-terminal": "latest",
+    "whatsapp-web.js": "latest"
+  }
+}

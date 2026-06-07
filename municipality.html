@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بلدية مأدبا الكبرى - الطلبات والإشادات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #06121f;
+      --surface: #0b1f33;
+      --surface2: #12314d;
+      --border: rgba(77,166,255,0.22);
+      --accent: #1e90ff;
+      --accent2: #00bfff;
+      --accent3: #4da6ff;
+      --text: #eaf4ff;
+      --muted: #9fc4e8;
+      --gold: #4da6ff;
+      --danger: #ef4444;
+      --success: #25d366;
+      --whatsapp: #25d366;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Cairo", "Tajawal", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(37,99,235,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(96,165,250,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(59,130,246,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(77,166,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(77,166,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .bg-logo-watermark {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); z-index: 0;
+      opacity: 0.04; width: 500px; pointer-events: none;
+      filter: grayscale(1) brightness(3);
+    }
+    .wrapper { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 40px; padding: 14px 24px;
+      background: rgba(11,31,51,0.7); border: 1px solid var(--border);
+      border-radius: 16px; backdrop-filter: blur(12px);
+      animation: fadeDown 0.7s ease both;
+    }
+    .topbar-logo img { height: 52px; display: block; filter: drop-shadow(0 0 8px rgba(30,144,255,0.3)); }
+    .topbar-info { text-align: left; direction: ltr; }
+    .topbar-phone { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; direction: ltr; }
+    .topbar-phone-label { font-size: 11px; color: var(--muted); text-align: right; direction: rtl; }
+
+    .header { text-align: center; margin-bottom: 35px; animation: fadeDown 0.8s 0.1s ease both; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(30,144,255,0.08); border: 1px solid rgba(77,166,255,0.3);
+      border-radius: 100px; padding: 6px 18px; font-size: 13px;
+      color: var(--accent); margin-bottom: 20px; letter-spacing: 0.5px;
+    }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent3); box-shadow: 0 0 8px var(--accent3); animation: pulse 2s infinite; }
+    h1 { font-size: clamp(1.8rem,5vw,2.9rem); font-weight: 900; line-height: 1.2; margin-bottom: 10px;
+      background: linear-gradient(135deg, #eaf4ff, #4da6ff, #1e90ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .subtitle { font-size: 1rem; color: var(--muted); max-width: 560px; margin: 0 auto; line-height: 1.8; font-weight: 400; }
+    .features { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .feat {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 50px; padding: 7px 14px; font-size: 12px; color: var(--muted);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .feat:hover { border-color: var(--accent); color: var(--text); }
+    .feat-icon { font-size: 14px; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 24px; padding: 44px 40px; position: relative; overflow: hidden;
+      animation: fadeUp 1s 0.3s ease both;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .card::before {
+      content: ""; position: absolute; top: 0; right: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #60a5fa, #2563eb, #1d4ed8, transparent);
+    }
+    .card-corner {
+      position: absolute; bottom: -60px; left: -60px; width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30,144,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .card-logo-center { display: flex; justify-content: center; margin-bottom: 28px; }
+    .card-logo-box {
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(30,144,255,0.06); border: 1px solid rgba(77,166,255,0.22);
+      border-radius: 18px; padding: 18px 32px; gap: 18px;
+    }
+    .card-logo-box img { height: 68px; filter: drop-shadow(0 2px 8px rgba(255,255,255,0.15)); }
+    .card-logo-text { text-align: right; }
+    .card-logo-text .name-ar { font-size: 1.15rem; font-weight: 800; color: var(--accent); line-height: 1.4; }
+    .card-logo-text .name-en { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 28px;
+      background: var(--surface2); border-radius: 14px; padding: 4px;
+    }
+    .tab-btn {
+      flex: 1; padding: 14px 20px; border: none; border-radius: 12px;
+      font-family: "Cairo", sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.3s;
+      background: transparent; color: var(--muted);
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      background: var(--accent); color: #06121f;
+      box-shadow: 0 4px 16px rgba(30,144,255,0.3);
+    }
+    .tab-content { display: none; animation: fadeUp 0.5s ease; }
+    .tab-content.active { display: block; }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--accent); margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.3px; }
+    label span.req { color: var(--accent); margin-right: 3px; }
+
+    .input-wrap { position: relative; }
+    .input-icon {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; color: var(--muted); pointer-events: none; transition: color 0.3s;
+    }
+    input[type="text"], input[type="tel"], select, textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1.5px solid rgba(77,166,255,0.12);
+      border-radius: 12px;
+      padding: 14px 44px 14px 16px;
+      font-family: "Cairo", sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      direction: rtl;
+    }
+    select { cursor: pointer; appearance: none; -webkit-appearance: none; padding: 14px 44px 14px 16px; }
+    select option { background: var(--surface); color: var(--text); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(30,144,255,0.1); }
+    input:focus ~ .input-icon, select:focus ~ .input-icon { color: var(--accent); }
+    input::placeholder, textarea::placeholder { color: #59586d; }
+    textarea { resize: vertical; min-height: 150px; padding: 16px 44px 16px 16px; line-height: 1.8; }
+    .textarea-wrap { position: relative; }
+    .textarea-icon { position: absolute; right: 14px; top: 16px; font-size: 15px; color: var(--muted); pointer-events: none; transition: color 0.3s; }
+    textarea:focus ~ .textarea-icon { color: var(--accent); }
+    .char-count { font-size: 11px; color: var(--muted); text-align: left; margin-top: 4px; }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .notify-section { margin: 26px 0; }
+    .notify-title { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
+    .notify-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .notify-opt { flex: 1; min-width: 130px; position: relative; }
+    .notify-opt input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .notify-opt label {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2); border: 1.5px solid rgba(77,166,255,0.12);
+      border-radius: 12px; padding: 13px 14px; cursor: pointer;
+      transition: border-color 0.3s, background 0.3s;
+      font-size: 14px; color: var(--text); font-weight: 500;
+    }
+    .notify-opt input:checked + label { border-color: var(--accent); background: rgba(30,144,255,0.08); color: var(--accent); }
+    .notify-opt label:hover { border-color: rgba(77,166,255,0.4); }
+    .notify-icon { font-size: 18px; }
+    .check-box {
+      width: 18px; height: 18px; border: 2px solid var(--border);
+      border-radius: 5px; margin-right: auto; transition: border-color 0.3s, background 0.3s;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .notify-opt input:checked + label .check-box { border-color: var(--accent); background: var(--accent); }
+    .notify-opt input:checked + label .check-box::after { content: "\2713"; font-size: 11px; color: #06121f; font-weight: 700; }
+
+    .btn-submit {
+      width: 100%; padding: 18px 32px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8);
+      color: #eaf4ff; font-family: "Cairo", sans-serif; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.3s, opacity 0.2s;
+      position: relative; overflow: hidden; letter-spacing: 0.5px; margin-top: 8px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(30,144,255,0.4); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .btn-submit:hover::after { opacity: 1; }
+    .btn-submit.loading { pointer-events: none; opacity: 0.8; }
+    .btn-submit.green { background: linear-gradient(135deg, #25d366, #1da851); }
+    .btn-submit.green:hover { box-shadow: 0 12px 32px rgba(37,211,102,0.4); }
+
+    .success-overlay {
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 20px 0; gap: 18px;
+      animation: fadeUp 0.6s ease;
+    }
+    .success-overlay.show { display: flex; }
+    .form-content.hidden { display: none; }
+    .success-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(30,144,255,0.1); border: 2px solid var(--accent3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; box-shadow: 0 0 30px rgba(30,144,255,0.2);
+      animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .success-icon.green { border-color: var(--success); background: rgba(37,211,102,0.1); box-shadow: 0 0 30px rgba(37,211,102,0.2); }
+    .success-title { font-size: 1.6rem; font-weight: 900; color: var(--accent); }
+    .success-msg { color: var(--muted); font-size: 14px; line-height: 1.8; max-width: 420px; }
+    .ticket-num {
+      display: inline-block; background: var(--surface2); border: 1px solid var(--accent);
+      border-radius: 10px; padding: 10px 24px; font-size: 1.1rem;
+      font-weight: 700; color: var(--accent); letter-spacing: 2px; direction: ltr;
+    }
+    .track-methods { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+    .track-btn {
+      display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+      border-radius: 10px; font-family: "Cairo", sans-serif; font-size: 14px;
+      font-weight: 700; cursor: pointer; border: none;
+      transition: transform 0.2s, box-shadow 0.2s; text-decoration: none;
+    }
+    .track-btn:hover { transform: translateY(-2px); }
+    .btn-wa { background: #25d366; color: #06121f; box-shadow: 0 4px 16px rgba(37,211,102,0.3); }
+    .btn-sms { background: var(--accent2); color: #06121f; box-shadow: 0 4px 16px rgba(0,191,255,0.3); }
+    .btn-new { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-new:hover { color: var(--text); border-color: var(--accent); }
+
+    .error-msg { font-size: 12px; color: var(--danger); margin-top: 4px; display: none; }
+    .field.has-error input, .field.has-error select, .field.has-error textarea { border-color: var(--danger); }
+    .field.has-error .error-msg { display: block; }
+
+    .footer { text-align: center; margin-top: 44px; color: var(--muted); font-size: 12px; line-height: 2; animation: fadeUp 1s 0.5s ease both; opacity: 0.6; }
+
+    /* Service cards for compliments */
+    .services-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+    }
+    .service-card {
+      background: var(--surface2); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 16px; cursor: pointer;
+      transition: all 0.3s; position: relative;
+    }
+    .service-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .service-card.selected { border-color: var(--success); background: rgba(37,211,102,0.08); }
+    .service-card.selected::after {
+      content: "\2713"; position: absolute; top: 8px; left: 8px;
+      width: 24px; height: 24px; background: var(--success);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 13px; font-weight: 700; color: #06121f;
+    }
+    .service-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .service-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* Rating stars */
+    .rating-section { margin: 20px 0; text-align: center; }
+    .rating-title { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
+    .stars { display: flex; gap: 6px; justify-content: center; direction: ltr; }
+    .star-btn {
+      font-size: 36px; background: none; border: none; cursor: pointer;
+      color: var(--border); transition: all 0.2s;
+    }
+    .star-btn:hover, .star-btn.active { color: #f59e0b; transform: scale(1.15); text-shadow: 0 0 12px rgba(245,158,11,0.5); }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; gap: 12px; text-align: center; }
+      .topbar-info { text-align: center; }
+      .topbar-phone-label { text-align: center; }
+      .card { padding: 28px 20px; }
+    }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    @keyframes successPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; width: 17px; height: 17px; border: 2px solid rgba(96,165,250,0.2); border-top-color: #eaf4ff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="grid-overlay"></div>
+  <img class="bg-logo-watermark" src="logo.jpg.png" alt="" />
+
+  <div class="wrapper">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <img src="logo.jpg.png" alt="شعار بلدية مأدبا الكبرى" />
+      </div>
+      <div class="topbar-info">
+        <div class="topbar-phone-label">للتواصل والاستفسار</div>
+        <div class="topbar-phone" dir="ltr">+00962778003080</div>
+        <a href="adminpage.html" target="_blank" style="display:inline-block;margin-top:8px;padding:6px 14px;background:#1e90ff;color:#06121f;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">🔐 لوحة الإدارة</a>
+      </div>
+    </div>
+
+    <header class="header">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        متاح الآن · نستقبل طلباتكم وإشاداتكم
+      </div>
+      <h1>بلدية مأدبا الكبرى</h1>
+      <p class="subtitle">
+        يمكنكم تقديم طلباتكم وشكاويكم، أو إرسال كلمات الشكر والتقدير لخدماتنا البلدية.
+        <br />نحن هنا لخدمتكم على مدار الساعة.
+      </p>
+      <div class="features">
+        <div class="feat"><span class="feat-icon">⚡</span> استجابة سريعة</div>
+        <div class="feat"><span class="feat-icon">💬</span> متابعة عبر واتساب</div>
+        <div class="feat"><span class="feat-icon">🔒</span> بياناتك آمنة</div>
+        <div class="feat"><span class="feat-icon">⭐</span> نقدر رأيك</div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="card-corner"></div>
+      <div class="card-logo-center">
+        <div class="card-logo-box">
+          <img src="logo.jpg.png" alt="شعار البلدية" />
+          <div class="card-logo-text">
+            <div class="name-ar">بلدية مأدبا الكبرى</div>
+            <div class="name-en">Greater Madaba Municipality</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('request')" id="tabRequest">📋 طلب / شكوى</button>
+        <button class="tab-btn" onclick="switchTab('compliment')" id="tabCompliment">⭐ شكر / إشادة</button>
+      </div>
+
+      <!-- ========== TAB 1: REQUEST ========== -->
+      <div class="tab-content active" id="tabContentRequest">
+        <div class="form-content" id="formContentRequest">
+          <div class="section-label">بيانات التواصل</div>
+          <div class="form-grid">
+            <div class="field" id="reqFieldName">
+              <label for="reqName">الاسم الكامل <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="text" id="reqName" placeholder="أدخل اسمك الكامل" autocomplete="name" />
+                <span class="input-icon">👤</span>
+              </div>
+              <span class="error-msg">الرجاء إدخال الاسم</span>
+            </div>
+            <div class="field" id="reqFieldPhone">
+              <label for="reqPhone">رقم الهاتف <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="tel" id="reqPhone" placeholder="مثال: 07xxxxxxxx" autocomplete="tel" />
+                <span class="input-icon">📞</span>
+              </div>
+              <span class="error-msg">الرجاء إدخال رقم هاتف صحيح</span>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-top:8px">تفاصيل الطلب</div>
+          <div class="field" id="reqFieldDesc">
+            <label for="reqDescription">وصف المشكلة أو الطلب <span class="req">*</span></label>
+            <div class="textarea-wrap">
+              <textarea id="reqDescription" placeholder="اشرح طلبك أو مشكلتك بالتفصيل..."></textarea>
+              <span class="textarea-icon">✍️</span>
+            </div>
+            <span class="char-count" id="reqCharCount">0 / 1000 حرف</span>
+            <span class="error-msg">الرجاء وصف طلبك (10 أحرف على الأقل)</span>
+          </div>
+
+          <div class="notify-section">
+            <div class="notify-title">🔔 كيف تريد متابعة طلبك؟</div>
+            <div class="notify-options">
+              <div class="notify-opt">
+                <input type="checkbox" id="reqNotifyWa" checked />
+                <label for="reqNotifyWa"><span class="notify-icon">💬</span> واتساب <span class="check-box"></span></label>
+              </div>
+              <div class="notify-opt">
+                <input type="checkbox" id="reqNotifySms" checked />
+                <label for="reqNotifySms"><span class="notify-icon">📩</span> رسالة نصية <span class="check-box"></span></label>
+              </div>
+              <div class="notify-opt">
+                <input type="checkbox" id="reqNotifyBoth" />
+                <label for="reqNotifyBoth"><span class="notify-icon">🔔</span> كلاهما <span class="check-box"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-submit" id="reqSubmitBtn" onclick="submitRequest()">إرسال الطلب 🚀</button>
+        </div>
+
+        <div class="success-overlay" id="reqSuccessOverlay">
+          <div class="success-icon">✅</div>
+          <div class="success-title">تم استلام طلبك!</div>
+          <p class="success-msg">شكراً لتواصلك مع بلدية مأدبا الكبرى. تم تسجيل طلبك بنجاح وسيتم التواصل معك قريباً.</p>
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">رقم طلبك</div>
+            <span class="ticket-num" id="reqTicketNum">#REQ-00000</span>
+          </div>
+          <div class="track-methods">
+            <a id="reqWaLink" href="#" class="track-btn btn-wa" target="_blank">💬 متابعة عبر واتساب</a>
+            <button class="track-btn btn-new" onclick="resetRequestForm()">➕ طلب جديد</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== TAB 2: COMPLIMENT ========== -->
+      <div class="tab-content" id="tabContentCompliment">
+        <div class="form-content" id="formContentCompliment">
+          <div class="section-label">اختر الخدمة التي ترغب في الإشادة بها</div>
+
+          <div class="services-grid" id="servicesGrid">
+            <div class="service-card" data-service="مديرية الأشغال والخدمات الهندسية" onclick="selectService(this)">
+              <div class="service-name">🏗️ الأشغال والخدمات الهندسية</div>
+              <div class="service-desc">البنية التحتية، الطرق، الأبنية، الصيانة الهندسية</div>
+            </div>
+            <div class="service-card" data-service="مديرية التخطيط والتنظيم" onclick="selectService(this)">
+              <div class="service-name">📐 التخطيط والتنظيم</div>
+              <div class="service-desc">التخطيط العمراني، تنظيم المدن، التراخيص التنظيمية</div>
+            </div>
+            <div class="service-card" data-service="مديرية الشؤون الصحية والبيئية" onclick="selectService(this)">
+              <div class="service-name">🏥 الشؤون الصحية والبيئية</div>
+              <div class="service-desc">النظافة العامة، الرقابة الصحية، البيئة</div>
+            </div>
+            <div class="service-card" data-service="مديرية الخدمات الزراعية والحدائق والمنتزهات" onclick="selectService(this)">
+              <div class="service-name">🌿 الخدمات الزراعية والحدائق</div>
+              <div class="service-desc">الحدائق، المنتزهات، التشجير، الزراعة</div>
+            </div>
+            <div class="service-card" data-service="مديرية الحركة والصيانة" onclick="selectService(this)">
+              <div class="service-name">🚦 الحركة والصيانة</div>
+              <div class="service-desc">إشارات المرور، صيانة الشوارع، الإنارة العامة</div>
+            </div>
+            <div class="service-card" data-service="مديرية الاستثمار" onclick="selectService(this)">
+              <div class="service-name">💰 الاستثمار</div>
+              <div class="service-desc">الاستثمارات البلدية، العقارات، المشاريع الاستثمارية</div>
+            </div>
+            <div class="service-card" data-service="مديرية رخص المهن" onclick="selectService(this)">
+              <div class="service-name">📜 رخص المهن</div>
+              <div class="service-desc">تراخيص المهن، رخص المحلات التجارية</div>
+            </div>
+            <div class="service-card" data-service="مديرية شؤون المناطق" onclick="selectService(this)">
+              <div class="service-name">🏘️ شؤون المناطق</div>
+              <div class="service-desc">خدمات الأحياء والمناطق، العلاقات المجتمعية</div>
+            </div>
+            <div class="service-card" data-service="خدمة عامة - البلدية بشكل عام" onclick="selectService(this)">
+              <div class="service-name">🏛️ خدمة عامة</div>
+              <div class="service-desc">إشادة عامة بخدمات البلدية بشكل عام</div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center" id="selectedServiceDisplay">لم يتم اختيار خدمة بعد</div>
+
+          <div class="rating-section">
+            <div class="rating-title">⭐ قم بتقييم الخدمة</div>
+            <div class="stars" id="starRating">
+              <button class="star-btn" data-star="1" onclick="setRating(1)">☆</button>
+              <button class="star-btn" data-star="2" onclick="setRating(2)">☆</button>
+              <button class="star-btn" data-star="3" onclick="setRating(3)">☆</button>
+              <button class="star-btn" data-star="4" onclick="setRating(4)">☆</button>
+              <button class="star-btn" data-star="5" onclick="setRating(5)">☆</button>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-top:6px" id="ratingLabel">اختر تقييمك</div>
+          </div>
+
+          <div class="section-label">بيانات المرسل</div>
+          <div class="form-grid">
+            <div class="field" id="compFieldName">
+              <label for="compName">الاسم الكامل <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="text" id="compName" placeholder="أدخل اسمك" autocomplete="name" />
+                <span class="input-icon">👤</span>
+              </div>
+              <span class="error-msg">الرجاء إدخال الاسم</span>
+            </div>
+            <div class="field" id="compFieldPhone">
+              <label for="compPhone">رقم الهاتف</label>
+              <div class="input-wrap">
+                <input type="tel" id="compPhone" placeholder="اختياري" autocomplete="tel" />
+                <span class="input-icon">📞</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">كلمة الشكر</div>
+          <div class="field" id="compFieldMsg">
+            <label for="compMessage">رسالتك <span class="req">*</span></label>
+            <div class="textarea-wrap">
+              <textarea id="compMessage" placeholder="اكتب كلمة شكر أو إشادة بالخدمة التي تلقيتها..."></textarea>
+              <span class="textarea-icon">💬</span>
+            </div>
+            <span class="char-count" id="compCharCount">0 / 500 حرف</span>
+            <span class="error-msg">الرجاء كتابة رسالتك</span>
+          </div>
+
+          <button class="btn-submit green" id="compSubmitBtn" onclick="submitCompliment()">إرسال الإشادة ⭐</button>
+        </div>
+
+        <div class="success-overlay" id="compSuccessOverlay">
+          <div class="success-icon green">⭐</div>
+          <div class="success-title">شكراً لك!</div>
+          <p class="success-msg">
+            نقدر كلماتك الجميلة! تم تسجيل إشادتك وسنعمل على إيصالها إلى الجهة المعنية.
+            رأيك يهمنا ويساعدنا على التحسين المستمر.
+          </p>
+          <div class="track-methods">
+            <a id="compWaLink" href="#" class="track-btn btn-wa" target="_blank">💬 مشاركة عبر واتساب</a>
+            <button class="track-btn btn-new" onclick="resetComplimentForm()">➕ إشادة جديدة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      بلدية مأدبا الكبرى · Greater Madaba Municipality<br />
+      جميع بياناتك محمية وسرية · نحن هنا لخدمتكم<br />
+      <span dir="ltr" style="color:var(--muted)">+00962778003080</span>
+    </div>
+  </div>
+
+  <script>
+    // ─── Tab switching ───
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if (tab === 'request') {
+        document.getElementById('tabRequest').classList.add('active');
+        document.getElementById('tabContentRequest').classList.add('active');
+      } else {
+        document.getElementById('tabCompliment').classList.add('active');
+        document.getElementById('tabContentCompliment').classList.add('active');
+      }
+    }
+
+    // ─── Request char counter ───
+    const reqDesc = document.getElementById('reqDescription');
+    const reqCharCount = document.getElementById('reqCharCount');
+    reqDesc.addEventListener('input', () => {
+      const len = reqDesc.value.length;
+      reqCharCount.textContent = `${len} / 1000 حرف`;
+      if (len > 1000) reqDesc.value = reqDesc.value.slice(0, 1000);
+    });
+
+    // ─── Comp char counter ───
+    const compMsg = document.getElementById('compMessage');
+    const compCharCount = document.getElementById('compCharCount');
+    compMsg.addEventListener('input', () => {
+      const len = compMsg.value.length;
+      compCharCount.textContent = `${len} / 500 حرف`;
+      if (len > 500) compMsg.value = compMsg.value.slice(0, 500);
+    });
+
+    // ─── Both checkbox sync ───
+    document.getElementById('reqNotifyBoth').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('reqNotifyWa').checked = true;
+        document.getElementById('reqNotifySms').checked = true;
+      }
+    });
+
+    // ─── Service selection ───
+    let selectedService = null;
+    function selectService(el) {
+      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedService = el.dataset.service;
+      document.getElementById('selectedServiceDisplay').textContent = `✅ الخدمة المختارة: ${selectedService}`;
+    }
+
+    // ─── Star rating ───
+    let currentRating = 0;
+    function setRating(r) {
+      currentRating = r;
+      const btns = document.querySelectorAll('.star-btn');
+      btns.forEach((b, i) => {
+        if (i < r) { b.textContent = '\u2B50'; b.classList.add('active'); }
+        else { b.textContent = '\u2606'; b.classList.remove('active'); }
+      });
+      const labels = ['', 'ضعيف', 'مقبول', 'جيد', 'جيد جداً', 'ممتاز'];
+      document.getElementById('ratingLabel').textContent = `تقييمك: ${labels[r]} (${r}/5)`;
+    }
+
+    // ─── Validation helpers ───
+    function validateField(fieldId, condition) {
+      const el = document.getElementById(fieldId);
+      if (condition) el.classList.remove('has-error');
+      else el.classList.add('has-error');
+      return !!condition;
+    }
+
+    function generateTicket(prefix) {
+      return `#${prefix}-${Math.floor(10000 + Math.random() * 90000)}`;
+    }
+
+    // ─── Submit Request ───
+    function submitRequest() {
+      const name = document.getElementById('reqName').value.trim();
+      const phone = document.getElementById('reqPhone').value.trim().replace(/\s/g, '');
+      const desc = document.getElementById('reqDescription').value.trim();
+
+      let ok = true;
+      ok &= validateField('reqFieldName', name.length > 0);
+      ok &= validateField('reqFieldPhone', /^\+?[\d\-]{7,15}$/.test(phone));
+      ok &= validateField('reqFieldDesc', desc.length >= 10);
+      if (!ok) return;
+
+      const btn = document.getElementById('reqSubmitBtn');
+      btn.innerHTML = 'جاري الإرسال... <span class="spinner"></span>';
+      btn.classList.add('loading');
+
+      const ticket = generateTicket('REQ');
+      const waNumber = '00962778003080';
+      const waMsg = encodeURIComponent(
+        `مرحباً 👋 - بلدية مأدبا الكبرى\n\nتم تقديم طلب جديد:\nالاسم: ${name}\nرقم الهاتف: ${phone}\nرقم الطلب: ${ticket}\n\nالوصف:\n${desc}`
+      );
+
+      // Save to localStorage for admin
+      const requests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+      requests.push({
+        id: Date.now(), ticket, name, phone, description: desc,
+        date: new Date().toLocaleString('ar'), status: 'طلب جديد'
+      });
+      localStorage.setItem('adminRequests', JSON.stringify(requests));
+
+      document.getElementById('reqWaLink').href = `https://wa.me/${waNumber}?text=${waMsg}`;
+      window._lastTicket = ticket;
+      window._lastPhone = phone;
+
+      setTimeout(() => {
+        document.getElementById('reqTicketNum').textContent = ticket;
+        document.getElementById('formContentRequest').classList.add('hidden');
+        document.getElementById('reqSuccessOverlay').classList.add('show');
+
+        const doWa = document.getElementById('reqNotifyWa').checked || document.getElementById('reqNotifyBoth').checked;
+        const doSms = document.getElementById('reqNotifySms').checked || document.getElementById('reqNotifyBoth').checked;
+
+        if (doWa) window.open(`https://wa.me/${waNumber}?text=${waMsg}`, '_blank');
+        if (doSms) {
+          const smsText = encodeURIComponent(`بلدية مأدبا الكبرى: تم استلام طلبك رقم ${ticket}. سنتواصل معك قريباً. +00962778003080`);
+          setTimeout(() => { window.location.href = `sms:${phone}?body=${smsText}`; }, 800);
+        }
+      }, 1200);
+    }
+
+    function resetRequestForm() {
+      document.getElementById('reqName').value = '';
+      document.getElementById('reqPhone').value = '';
+      document.getElementById('reqDescription').value = '';
+      document.getElementById('reqCharCount').textContent = '0 / 1000 حرف';
+      document.getElementById('reqNotifyWa').checked = true;
+      document.getElementById('reqNotifySms').checked = true;
+      document.getElementById('reqNotifyBoth').checked = false;
+      document.getElementById('formContentRequest').classList.remove('hidden');
+      document.getElementById('reqSuccessOverlay').classList.remove('show');
+      const btn = document.getElementById('reqSubmitBtn');
+      btn.innerHTML = 'إرسال الطلب 🚀';
+      btn.classList.remove('loading');
+    }
+
+    // ─── Submit Compliment ───
+    function submitCompliment() {
+      const name = document.getElementById('compName').value.trim();
+      const phone = document.getElementById('compPhone').value.trim().replace(/\s/g, '');
+      const msg = document.getElementById('compMessage').value.trim();
+
+      let ok = true;
+      ok &= validateField('compFieldName', name.length > 0);
+      ok &= validateField('compFieldMsg', msg.length > 0);
+      if (!selectedService) { alert('الرجاء اختيار الخدمة التي ترغب في الإشادة بها'); ok = false; }
+      if (currentRating === 0) { alert('الرجاء اختيار تقييم'); ok = false; }
+      if (!ok) return;
+
+      const btn = document.getElementById('compSubmitBtn');
+      btn.innerHTML = 'جاري الإرسال... <span class="spinner"></span>';
+      btn.classList.add('loading');
+
+      const ticket = generateTicket('CMP');
+      const waNumber = '00962778003080';
+      const stars = '⭐'.repeat(currentRating);
+      const waMsg = encodeURIComponent(
+        `🌟 إشادة - بلدية مأدبا الكبرى\n\nالاسم: ${name}\nالخدمة: ${selectedService}\nالتقييم: ${stars} (${currentRating}/5)\n\nالرسالة:\n${msg}`
+      );
+
+      // Save compliment to localStorage
+      const compliments = JSON.parse(localStorage.getItem('compliments') || '[]');
+      compliments.push({
+        id: Date.now(), ticket, name, phone, service: selectedService,
+        rating: currentRating, message: msg,
+        date: new Date().toLocaleString('ar'), status: 'جديد'
+      });
+      localStorage.setItem('compliments', JSON.stringify(compliments));
+
+      document.getElementById('compWaLink').href = `https://wa.me/${waNumber}?text=${waMsg}`;
+
+      setTimeout(() => {
+        document.getElementById('formContentCompliment').classList.add('hidden');
+        document.getElementById('compSuccessOverlay').classList.add('show');
+
+        // Open WhatsApp to share the compliment
+        window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(
+          `🌟 إشادة من ${name}\nالخدمة: ${selectedService}\nالتقييم: ${stars}\n\n"${msg}"\n\n- بلدية مأدبا الكبرى`
+        )}`, '_blank');
+      }, 1000);
+    }
+
+    function resetComplimentForm() {
+      document.getElementById('compName').value = '';
+      document.getElementById('compPhone').value = '';
+      document.getElementById('compMessage').value = '';
+      document.getElementById('compCharCount').textContent = '0 / 500 حرف';
+      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+      selectedService = null;
+      currentRating = 0;
+      document.getElementById('selectedServiceDisplay').textContent = 'لم يتم اختيار خدمة بعد';
+      document.getElementById('ratingLabel').textContent = 'اختر تقييمك';
+      document.querySelectorAll('.star-btn').forEach(b => { b.textContent = '\u2606'; b.classList.remove('active'); });
+      document.getElementById('formContentCompliment').classList.remove('hidden');
+      document.getElementById('compSuccessOverlay').classList.remove('show');
+      const btn = document.getElementById('compSubmitBtn');
+      btn.innerHTML = 'إرسال الإشادة ⭐';
+      btn.classList.remove('loading');
+    }
+  </script>
+</body>
+</html>

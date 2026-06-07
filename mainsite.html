@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>بلدية مأدبا الكبرى - تقديم الطلبات</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #06121f; /* deep navy */
+        --surface: #0b1f33; /* dark blue */
+        --surface2: #12314d; /* card/input blue */
+        --border: rgba(77, 166, 255, 0.22);
+
+        --accent: #1e90ff; /* main bright blue */
+        --accent2: #00bfff; /* sky blue */
+        --accent3: #4da6ff; /* soft blue */
+
+        --text: #eaf4ff; /* white-blue text */
+        --muted: #9fc4e8; /* muted blue text */
+        --gold: #4da6ff; /* replaces old gold */
+        --danger: #ef4444;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Cairo", "Tajawal", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ─── Background layers ─── */
+      .bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 20% 10%,
+            rgba(37, 99, 235, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 50% at 80% 80%,
+            rgba(96, 165, 250, 0.1) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 40% at 50% 50%,
+            rgba(59, 130, 246, 0.08) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+      }
+
+      .grid-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-image:
+          linear-gradient(rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+      }
+
+      /* Watermark logo in background */
+      .bg-logo-watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        opacity: 0.04;
+        width: 500px;
+        pointer-events: none;
+        filter: grayscale(1) brightness(3);
+      }
+
+      /* ─── Layout ─── */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 32px 20px 80px;
+      }
+
+      /* ─── Top nav bar ─── */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+        padding: 14px 24px;
+        background: rgb(117, 118, 126);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        backdrop-filter: blur(12px);
+        animation: fadeDown 0.7s ease both;
+      }
+
+      .topbar-logo img {
+        height: 52px;
+        display: block;
+        filter: drop-shadow(0 0 8px rgba(165, 154, 116, 0.3));
+      }
+
+      .topbar-info {
+        text-align: left;
+        direction: ltr;
+      }
+
+      .topbar-phone {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 0.5px;
+        direction: ltr;
+      }
+
+      .topbar-phone-label {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: right;
+        direction: rtl;
+      }
+
+      /* ─── Header ─── */
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeDown 0.8s 0.1s ease both;
+      }
+
+      /* ─── Madaba images strip ─── */
+      .madaba-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 40px;
+        animation: fadeUp 0.9s 0.15s ease both;
+      }
+
+      .madaba-img-card {
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        aspect-ratio: 4/3;
+        background: var(--surface2);
+      }
+
+      .madaba-img-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+      }
+
+      .madaba-img-card:hover img {
+        transform: scale(1.06);
+      }
+
+      .madaba-img-caption {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: linear-gradient(
+          transparent,
+          linear-gradient(135deg, #f5e6c8 0%, #63635c 50%, #5b5b66 100%)
+        );
+        padding: 22px 10px 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .madaba-img-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        transition: border-color 0.3s;
+        pointer-events: none;
+      }
+
+      .madaba-img-card:hover::after {
+        border-color: var(--accent);
+      }
+
+      @media (max-width: 560px) {
+        .madaba-strip {
+          grid-template-columns: 1fr 1fr;
+        }
+        .madaba-img-card:last-child {
+          display: none;
+        }
+        .topbar {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+        .topbar-info {
+          text-align: center;
+        }
+        .topbar-phone-label {
+          text-align: center;
+        }
+        .card {
+          padding: 28px 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(212, 175, 55, 0.08);
+        border: 1px solid rgba(138, 135, 127, 0.3);
+        border-radius: 100px;
+        padding: 6px 18px;
+        font-size: 13px;
+        color: var(--accent);
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      .badge-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent3);
+        box-shadow: 0 0 8px var(--accent3);
+        animation: pulse 2s infinite;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 2.9rem);
+        font-weight: 900;
+        line-height: 1.2;
+        margin-bottom: 10px;
+        background: linear-gradient(
+          135deg,
+          #f5e6c8 0%,
+          #63635c 50%,
+          #5b5b66 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+        color: var(--muted);
+        max-width: 520px;
+        margin: 0 auto;
+        line-height: 1.8;
+        font-weight: 400;
+      }
+
+      .features {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .feat {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        padding: 7px 14px;
+        font-size: 12px;
+        color: var(--muted);
+        transition:
+          border-color 0.3s,
+          color 0.3s;
+      }
+
+      .feat:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .feat-icon {
+        font-size: 14px;
+      }
+
+      /* ─── Card ─── */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 44px 40px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeUp 1s 0.3s ease both;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #60a5fa,
+          #2563eb,
+          #1d4ed8,
+          transparent
+        );
+      }
+
+      .card-corner {
+        position: absolute;
+        bottom: -60px;
+        left: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(61, 60, 57, 0.07) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      /* Logo box inside card */
+      .card-logo-center {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 32px;
+      }
+
+      .card-logo-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(212, 175, 55, 0.06);
+        border: 1px solid rgba(243, 8, 8, 0.22);
+        border-radius: 18px;
+        padding: 18px 32px;
+        gap: 18px;
+      }
+
+      .card-logo-box img {
+        height: 68px;
+        filter: drop-shadow(0 2px 8px rgb(255, 255, 255));
+      }
+
+      .card-logo-text {
+        text-align: right;
+      }
+      .card-logo-text .name-ar {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--accent);
+        line-height: 1.4;
+      }
+      .card-logo-text .name-en {
+        font-size: 11px;
+        color: var(--muted);
+        letter-spacing: 0.5px;
+      }
+
+      /* ─── Section label ─── */
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--accent);
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ─── Form ─── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.3px;
+      }
+      label span.req {
+        color: var(--accent);
+        margin-right: 3px;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        color: var(--muted);
+        pointer-events: none;
+        transition: color 0.3s;
+      }
+
+      input[type="text"],
+      input[type="tel"],
+      textarea {
+        width: 100%;
+        background: var(--surface2);
+        border: 1.5px solid rgba(23, 25, 139, 0.12);
+        border-radius: 12px;
+        padding: 14px 44px 14px 16px;
+        font-family: "Cairo", sans-serif;
+        font-size: 15px;
+        color: var(--text);
+        outline: none;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s,
+          background 0.3s;
+        direction: rtl;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        background: #a09c8f;
+        box-shadow: 0 0 0 3px rgba(49, 48, 45, 0.1);
+      }
+
+      input:focus ~ .input-icon,
+      textarea:focus ~ .input-icon {
+        color: var(--accent);
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #59586d;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 170px;
+        padding: 16px 44px 16px 16px;
+        line-height: 1.8;
+      }
+
+      .textarea-wrap {
+        position: relative;
+      }
+      .textarea-icon {
+        position: absolute;
+        right: 14px;
+        top: 16px;
+        font-size: 15px;
+        color: var(--muted);
+        pointer-events: none;
+        transition: color 0.3s;
+      }
+      textarea:focus ~ .textarea-icon {
+        color: var(--accent);
+      }
+
+      .char-count {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: left;
+        margin-top: 4px;
+      }
+
+      /* ─── Notify ─── */
+      .notify-section {
+        margin: 26px 0;
+      }
+      .notify-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+      .notify-options {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .notify-opt {
+        flex: 1;
+        min-width: 130px;
+        position: relative;
+      }
+      .notify-opt input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .notify-opt label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface2);
+        border: 1.5px solid rgba(28, 39, 138, 0.12);
+        border-radius: 12px;
+        padding: 13px 14px;
+        cursor: pointer;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+        font-size: 14px;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .notify-opt input:checked + label {
+        border-color: var(--accent);
+        background: rgba(95, 99, 121, 0.08);
+        color: var(--accent);
+      }
+
+      .notify-opt label:hover {
+        border-color: rgba(54, 53, 47, 0.4);
+      }
+      .notify-icon {
+        font-size: 18px;
+      }
+
+      .check-box {
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--border);
+        border-radius: 5px;
+        margin-right: auto;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .notify-opt input:checked + label .check-box {
+        border-color: var(--accent);
+        background: var(--accent);
+      }
+
+      .notify-opt input:checked + label .check-box::after {
+        content: "✓";
+        font-size: 11px;
+        color: #08070a;
+        font-weight: 700;
+      }
+
+      /* ─── Track Info ─── */
+      .track-info {
+        margin-top: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 175, 55, 0.06),
+          rgba(184, 134, 11, 0.06)
+        );
+        border: 1px solid rgba(71, 70, 82, 0.2);
+        border-radius: 16px;
+        padding: 22px 26px;
+      }
+
+      .track-info-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .track-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .track-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .step-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgb(70, 69, 65);
+        border: 1px solid rgba(99, 96, 87, 0.3);
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      /* ─── Submit ─── */
+      .btn-submit {
+        width: 100%;
+        padding: 18px 32px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(
+          135deg,
+          #3b82f6 0%,
+          #2563eb 50%,
+          #1d4ed8 100%
+        );
+        color: white;
+        color: #08070a;
+        font-family: "Cairo", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.3s,
+          opacity 0.2s;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+        margin-top: 8px;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(212, 175, 55, 0.4);
+      }
+
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      .btn-submit::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.15),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .btn-submit:hover::after {
+        opacity: 1;
+      }
+      .btn-submit.loading {
+        pointer-events: none;
+        opacity: 0.8;
+      }
+
+      /* ─── Success ─── */
+      .success-overlay {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px 0;
+        gap: 18px;
+        animation: fadeUp 0.6s ease;
+      }
+
+      .success-overlay.show {
+        display: flex;
+      }
+      .form-content.hidden {
+        display: none;
+      }
+
+      .success-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid var(--accent3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .success-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--accent);
+      }
+
+      .success-msg {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.8;
+        max-width: 380px;
+      }
+
+      .ticket-num {
+        display: inline-block;
+        background: var(--surface2);
+        border: 1px solid var(--accent);
+        border-radius: 10px;
+        padding: 10px 24px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 2px;
+        direction: ltr;
+      }
+
+      .track-methods {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .track-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-family: "Cairo", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        text-decoration: none;
+      }
+
+      .track-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-wa {
+        background: #25d366;
+        color: #08070a;
+        box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+      }
+      .btn-sms {
+        background: var(--accent2);
+        color: #08070a;
+        box-shadow: 0 4px 16px rgba(184, 134, 11, 0.3);
+      }
+      .btn-new {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
+      .btn-new:hover {
+        color: var(--text);
+        border-color: var(--accent);
+      }
+
+      /* ─── Validation ─── */
+      .error-msg {
+        font-size: 12px;
+        color: var(--danger);
+        margin-top: 4px;
+        display: none;
+      }
+      .field.has-error input,
+      .field.has-error textarea {
+        border-color: var(--danger);
+      }
+      .field.has-error .error-msg {
+        display: block;
+      }
+
+      /* ─── Footer ─── */
+      .footer {
+        text-align: center;
+        margin-top: 44px;
+        color: #504030;
+        font-size: 12px;
+        line-height: 2;
+        animation: fadeUp 1s 0.5s ease both;
+      }
+
+      /* ─── Animations ─── */
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      @keyframes successPop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 17px;
+        height: 17px;
+        border: 2px solid rgba(96, 165, 250, 0.05);
+        border-top-color: #08070a;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+        margin-left: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-layer"></div>
+    <div class="grid-overlay"></div>
+
+    <!--
+  =====================================================================
+  NOTE: Place the logo image file in the SAME folder as this index.html
+  File name: logo.jpg.png
+  =====================================================================
+-->
+
+    <!-- Watermark logo in page background -->
+    <img class="bg-logo-watermark" src="logo.jpg.png" alt="" />
+
+    <div class="wrapper">
+      <!-- ── Top Bar ── -->
+      <div class="topbar">
+        <div class="topbar-logo">
+          <img src="logo.jpg.png" alt="شعار بلدية مأدبا الكبرى" />
+        </div>
+        <div class="topbar-info">
+          <div class="topbar-phone-label">للتواصل والاستفسار</div>
+          <div class="topbar-phone" dir="ltr">+00962778003080</div>
+          <a href="adminpage.html" target="_blank" style="display:inline-block;margin-top:8px;padding:6px 14px;background:#1e90ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">🔐 لوحة الإدارة</a>
+        </div>
+      </div>
+
+      <!-- ── Header ── -->
+      <header class="header">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          متاح الآن · نستقبل طلباتكم
+        </div>
+        <h1>بلدية مأدبا الكبرى</h1>
+        <p class="subtitle">
+          قدّم طلبك أو اشرح مشكلتك وسنتواصل معك في أقرب وقت ممكن.
+          <br />يمكنك متابعة طلبك عبر واتساب أو رسالة نصية.
+        </p>
+        <div class="features">
+          <div class="feat">
+            <span class="feat-icon">⚡</span> استجابة سريعة
+          </div>
+          <div class="feat">
+            <span class="feat-icon">💬</span> متابعة عبر واتساب
+          </div>
+          <div class="feat"><span class="feat-icon">🔒</span> بياناتك آمنة</div>
+          <div class="feat"><span class="feat-icon">✅</span> تأكيد فوري</div>
+        </div>
+      </header>
+
+      <!-- ── Madaba Images Strip ── -->
+      <div class="madaba-strip">
+        <div class="madaba-img-card">
+          <img
+            src="madaba1.jpg.jpg"
+            alt="خريطة مأدبا الفسيفسائية"
+            loading="lazy"
+          />
+          <div class="madaba-img-caption">
+            خريطة مأدبا الفسيفسائية · القرن السادس الميلادي
+          </div>
+        </div>
+        <div class="madaba-img-card">
+          <img src="madaba3.jpg" alt="جبل نيبو - مأدبا" loading="lazy" />
+          <div class="madaba-img-caption">جبل نيبو · مأدبا</div>
+        </div>
+        <div class="madaba-img-card">
+          <img
+            src="madaba4.jpg"
+            alt="كنيسة القديس جرجس - مأدبا"
+            loading="lazy"
+          />
+          <div class="madaba-img-caption">كنيسة القديس جرجس · مأدبا</div>
+        </div>
+      </div>
+
+      <!-- ── Form Card ── -->
+      <div class="card">
+        <div class="card-corner"></div>
+
+        <!-- Logo box inside card (medium) -->
+        <div class="card-logo-center">
+          <div class="card-logo-box">
+            <img src="logo.jpg.png" alt="شعار البلدية" />
+            <div class="card-logo-text">
+              <div class="name-ar">بلدية مأدبا الكبرى</div>
+              <div class="name-en">Greater Madaba Municipality</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="form-content" id="formContent">
+          <div class="section-label">بيانات التواصل</div>
+
+          <div class="form-grid">
+            <div class="field" id="fieldName">
+              <label for="name">الاسم الكامل <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="أدخل اسمك الكامل"
+                  autocomplete="name"
+                />
+                <span class="input-icon">👤</span>
+              </div>
+              <span class="error-msg">الرجاء إدخال الاسم</span>
+            </div>
+
+            <div class="field" id="fieldPhone">
+              <label for="phone">رقم الهاتف <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="مثال: 07xxxxxxxx"
+                  autocomplete="tel"
+                />
+                <span class="input-icon">📞</span>
+              </div>
+              <span class="error-msg">الرجاء إدخال رقم هاتف صحيح</span>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-top: 8px">تفاصيل الطلب</div>
+
+          <div class="field" id="fieldDesc">
+            <label for="description"
+              >وصف المشكلة أو الطلب <span class="req">*</span></label
+            >
+            <div class="textarea-wrap">
+              <textarea
+                id="description"
+                placeholder="اشرح طلبك أو مشكلتك بالتفصيل... كلما كانت المعلومات أوضح، كان بإمكاننا مساعدتك بشكل أفضل وأسرع."
+              ></textarea>
+              <span class="textarea-icon">✍️</span>
+            </div>
+            <span class="char-count" id="charCount">0 / 1000 حرف</span>
+            <span class="error-msg">الرجاء وصف طلبك (10 أحرف على الأقل)</span>
+          </div>
+
+          <!-- Notify Options -->
+          <div class="notify-section">
+            <div class="notify-title">
+              🔔 كيف تريد متابعة طلبك؟ (اختر واحدة أو أكثر)
+            </div>
+            <div class="notify-options">
+              <div class="notify-opt">
+                <input type="checkbox" id="notifyWa" checked />
+                <label for="notifyWa">
+                  <span class="notify-icon">💬</span>
+                  واتساب
+                  <span class="check-box"></span>
+                </label>
+              </div>
+              <div class="notify-opt">
+                <input type="checkbox" id="notifySms" checked />
+                <label for="notifySms">
+                  <span class="notify-icon">📩</span>
+                  رسالة نصية SMS
+                  <span class="check-box"></span>
+                </label>
+              </div>
+              <div class="notify-opt">
+                <input type="checkbox" id="notifyBoth" />
+                <label for="notifyBoth">
+                  <span class="notify-icon">🔔</span>
+                  كلاهما معاً
+                  <span class="check-box"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Track Info -->
+          <div class="track-info">
+            <div class="track-info-title">📋 كيف تعمل متابعة الطلبات؟</div>
+            <div class="track-steps">
+              <div class="track-step">
+                <span class="step-num">١</span>
+                <span
+                  >بعد تقديم طلبك، ستصلك رسالة فورية برقم الطلب الخاص بك</span
+                >
+              </div>
+              <div class="track-step">
+                <span class="step-num">٢</span>
+                <span
+                  >سيتم إرسال تحديثات عند استلام الطلب وعند بدء المعالجة وعند
+                  الانتهاء</span
+                >
+              </div>
+              <div class="track-step">
+                <span class="step-num">٣</span>
+                <span
+                  >يمكنك التواصل معنا مباشرة عبر واتساب بذكر رقم طلبك لمزيد من
+                  المتابعة</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-submit" id="submitBtn" onclick="submitForm()">
+            إرسال الطلب ✈️
+          </button>
+        </div>
+
+        <!-- Success State -->
+        <div class="success-overlay" id="successOverlay">
+          <div class="success-icon">✅</div>
+          <div class="success-title">تم استلام طلبك!</div>
+          <p class="success-msg">
+            شكراً لتواصلك مع بلدية مأدبا الكبرى. تم تسجيل طلبك بنجاح وسيتم
+            التواصل معك قريباً.
+          </p>
+          <div>
+            <div
+              style="font-size: 12px; color: var(--muted); margin-bottom: 8px"
+            >
+              رقم طلبك
+            </div>
+            <span class="ticket-num" id="ticketNum">#REQ-00000</span>
+          </div>
+          <div class="track-methods">
+            <a id="waLink" href="#" class="track-btn btn-wa" target="_blank">
+              💬 متابعة عبر واتساب
+            </a>
+            <button class="track-btn btn-sms" onclick="sendSmsTracking()">
+              📩 متابعة عبر SMS
+            </button>
+            <button class="track-btn btn-new" onclick="resetForm()">
+              ➕ طلب جديد
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- end card -->
+
+      <!-- Footer -->
+      <div class="footer">
+        بلدية مأدبا الكبرى · Greater Madaba Municipality
+        <br />
+        جميع بياناتك محمية وسرية · نحن هنا لخدمتكم
+        <br />
+        <span dir="ltr" style="color: var(--muted)">+00962778003080</span>
+      </div>
+    </div>
+    <!-- end wrapper -->
+
+    <script>
+      // ── Char counter
+      const desc = document.getElementById("description");
+      const charCount = document.getElementById("charCount");
+      desc.addEventListener("input", () => {
+        const len = desc.value.length;
+        charCount.textContent = `${len} / 1000 حرف`;
+        if (len > 1000) desc.value = desc.value.slice(0, 1000);
+      });
+
+      // ── Both checkbox syncs
+      document
+        .getElementById("notifyBoth")
+        .addEventListener("change", function () {
+          if (this.checked) {
+            document.getElementById("notifyWa").checked = true;
+            document.getElementById("notifySms").checked = true;
+          }
+        });
+
+      function validate() {
+        let ok = true;
+
+        const nameField = document.getElementById("fieldName");
+        const nameVal = document.getElementById("name").value.trim();
+        if (!nameVal) {
+          nameField.classList.add("has-error");
+          ok = false;
+        } else nameField.classList.remove("has-error");
+
+        const phoneField = document.getElementById("fieldPhone");
+        const phoneVal = document
+          .getElementById("phone")
+          .value.trim()
+          .replace(/\s/g, "");
+        if (
+          !phoneVal ||
+          phoneVal.length < 7 ||
+          !/^\+?[\d\-]{7,15}$/.test(phoneVal)
+        ) {
+          phoneField.classList.add("has-error");
+          ok = false;
+        } else phoneField.classList.remove("has-error");
+
+        const descField = document.getElementById("fieldDesc");
+        const descVal = document.getElementById("description").value.trim();
+        if (descVal.length < 10) {
+          descField.classList.add("has-error");
+          ok = false;
+        } else descField.classList.remove("has-error");
+
+        return ok;
+      }
+
+      function generateTicket() {
+        const num = Math.floor(10000 + Math.random() * 90000);
+        return `#REQ-${num}`;
+      }
+
+      function submitForm() {
+        if (!validate()) return;
+
+        const btn = document.getElementById("submitBtn");
+        btn.innerHTML = 'جاري الإرسال... <span class="spinner"></span>';
+        btn.classList.add("loading");
+
+        const phone = document
+          .getElementById("phone")
+          .value.trim()
+          .replace(/\D/g, "");
+        const name = document.getElementById("name").value.trim();
+        const descVal = document.getElementById("description").value.trim();
+        const ticket = generateTicket();
+        // حفظ الطلب داخل لوحة الإدارة
+
+const requestData = {
+
+  id: Date.now(),
+
+  ticket: ticket,
+
+  name: name,
+
+  phone: phone,
+
+  description: descVal,
+
+  date: new Date().toLocaleString("ar"),
+
+  status: "طلب جديد"
+
+};
+
+
+// جلب الطلبات القديمة
+
+let adminRequests =
+JSON.parse(
+localStorage.getItem("adminRequests")
+) || [];
+
+
+// إضافة الطلب الجديد
+
+adminRequests.push(requestData);
+
+
+// حفظ الطلبات
+
+localStorage.setItem(
+"adminRequests",
+JSON.stringify(adminRequests)
+);
+
+        // ── WhatsApp number for Greater Madaba Municipality
+        const waNumber = "00962778003080";
+        const waMsg = encodeURIComponent(
+          `مرحباً 👋 - بلدية مأدبا الكبرى\n\nتم تقديم طلب جديد:\nالاسم: ${name}\nرقم الهاتف: ${phone}\nرقم الطلب: ${ticket}\n\nالوصف:\n${descVal}`,
+        );
+
+        document.getElementById("waLink").href =
+          `https://wa.me/${waNumber}?text=${waMsg}`;
+        window._lastTicket = ticket;
+        window._lastPhone = phone;
+        window._lastName = name;
+
+        setTimeout(() => {
+          document.getElementById("ticketNum").textContent = ticket;
+          document.getElementById("formContent").classList.add("hidden");
+          document.getElementById("successOverlay").classList.add("show");
+
+          const doWa  = document.getElementById("notifyWa").checked || document.getElementById("notifyBoth").checked;
+          const doSms = document.getElementById("notifySms").checked || document.getElementById("notifyBoth").checked;
+
+          if (doWa) {
+            window.open(`https://wa.me/${waNumber}?text=${waMsg}`, "_blank");
+          }
+          if (doSms) {
+            const smsText = encodeURIComponent(
+              `بلدية مأدبا الكبرى: تم استلام طلبك رقم ${ticket}. سنتواصل معك قريباً. +00962778003080`
+            );
+            // Send SMS to the citizen's phone
+            setTimeout(() => {
+              window.location.href = `sms:${phone}?body=${smsText}`;
+            }, 800);
+          }
+        }, 1600);
+      }
+
+      function sendSmsTracking() {
+        const phone = window._lastPhone || "";
+        const ticket = window._lastTicket || "";
+        const msg = encodeURIComponent(
+          `بلدية مأدبا الكبرى: تم استلام طلبك رقم ${ticket}. سنتواصل معك قريباً. +00962778003080`,
+        );
+        window.location.href = `sms:${phone}?body=${msg}`;
+      }
+
+      function resetForm() {
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("charCount").textContent = "0 / 1000 حرف";
+        document.getElementById("notifyWa").checked = true;
+        document.getElementById("notifySms").checked = true;
+        document.getElementById("notifyBoth").checked = false;
+        document.getElementById("formContent").classList.remove("hidden");
+        document.getElementById("successOverlay").classList.remove("show");
+        const btn = document.getElementById("submitBtn");
+        btn.innerHTML = "إرسال الطلب ✈️";
+        btn.classList.remove("loading");
+      }
+    </script>
+  </body>
+</html>
