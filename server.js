@@ -121,9 +121,12 @@ const PORT = process.env.PORT || 3000;
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
-    executablePath: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    ]
   }
 });
 
