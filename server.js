@@ -119,18 +119,39 @@ setInterval(() => {
 }, 60000);
 
 const PORT = process.env.PORT || 3000;
-const client = new Client({
-  authStrategy: new LocalAuth(),
-  puppeteer: {
-  executablePath: puppeteer.executablePath(),
-  headless: true,
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage"
-  ]
+async function startWhatsApp() {
+  const chromePath = await puppeteer.executablePath();
+
+  const client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+      executablePath: chromePath,
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+      ]
+    }
+  });
+
+  client.on("qr", qr => {
+    console.log("Scan this QR with WhatsApp:");
+    qrcode.generate(qr, { small: true });
+  });
+
+  client.on("ready", () => {
+    console.log("✅ WhatsApp Web connected");
+  });
+
+  client.on("message", async (msg) => {
+    // keep your current message code here
+  });
+
+  client.initialize();
 }
-});
+
+startWhatsApp();
 
 client.on("qr", qr => {
   console.log("Scan this QR with WhatsApp:");
